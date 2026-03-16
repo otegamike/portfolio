@@ -15,9 +15,25 @@ const projects: ProjectCardProps[] = [
       'Dashboard Analytics',
       'Backend Integration',
     ],
-    liveUrl: '#',
-    githubUrl: '#',
-    color: 'linear-gradient(135deg, #6c63ff, #a855f7)',
+    liveUrl: 'https://shopperific.netlify.app/',
+    githubUrl: 'https://github.com/otegamike/shopperific',
+    color: 'linear-gradient(135deg, hsl(120, 19%, 55%), hsl(120, 50%, 45%))',
+  },
+  {
+    title: 'Inkly',
+    description:
+      'A full-featured ecommerce platform with product browsing, search, cart management, and order processing. Built with a modern React frontend and a Node.js/Express backend integrated with MongoDB.',
+    techStack: ['React', 'TypeScript', 'Node.js', 'Express', 'MongoDB'],
+    features: [
+      'Product Search',
+      'Shopping Cart',
+      'Order Management',
+      'Dashboard Analytics',
+      'Backend Integration',
+    ],
+    liveUrl: 'https://shopperific.netlify.app/',
+    githubUrl: 'https://github.com/otegamike/shopperific',
+    color: 'linear-gradient(135deg, hsl(130, 34%, 55%), hsl(30, 90%, 45%))',
   },
   {
     title: 'React Dashboard System',

@@ -50,33 +50,33 @@ input, textarea {
   outline: none;
 }
 
-/* ===== CSS Custom Properties ===== */
+/* ===== CSS Custom Properties — Matrix Theme ===== */
 :root {
-  /* Colors */
-  --bg-primary: #0a0a0f;
-  --bg-secondary: #12121a;
-  --bg-tertiary: #1a1a2e;
-  --bg-card: #16162a;
-  --bg-card-hover: #1e1e3a;
+  /* Colors — Matrix Cyberpunk */
+  --bg-primary: #050505;
+  --bg-secondary: hsl(120, 20%, 4%);
+  --bg-tertiary: #0d1a0d;
+  --bg-card: hsl(120, 20%, 6%);
+  --bg-card-hover: #0f1f0f;
 
-  --text-primary: #e8e8f0;
-  --text-secondary: #a0a0b8;
-  --text-muted: #6b6b80;
+  --text-primary: #e6ffe6;
+  --text-secondary: #7dba7d;
+  --text-muted: #3d6b3d;
 
-  --accent: #6c63ff;
-  --accent-light: #8b83ff;
-  --accent-dark: #4f46e5;
-  --accent-glow: rgba(108, 99, 255, 0.25);
+  --accent: #00FF41;
+  --accent-light: #33ff66;
+  --accent-dark: #00cc33;
+  --accent-glow: rgba(0, 255, 65, 0.25);
 
-  --gradient-accent: linear-gradient(135deg, #6c63ff 0%, #a855f7 100%);
-  --gradient-accent-hover: linear-gradient(135deg, #8b83ff 0%, #c084fc 100%);
-  --gradient-bg: linear-gradient(180deg, #0a0a0f 0%, #12121a 50%, #0a0a0f 100%);
-  --gradient-card: linear-gradient(145deg, rgba(108, 99, 255, 0.08) 0%, rgba(168, 85, 247, 0.04) 100%);
+  --gradient-accent: linear-gradient(135deg, #188c35b8 0%, #00cc33 100%);
+  --gradient-accent-hover: linear-gradient(135deg, #33ff66 0%, #00FF41 100%);
+  --gradient-bg: linear-gradient(180deg, #050505 0%, #0a0f0a 50%, #050505 100%);
+  --gradient-card: linear-gradient(145deg, rgba(0, 255, 65, 0.06) 0%, rgba(0, 204, 51, 0.03) 100%);
 
-  --border-color: rgba(108, 99, 255, 0.15);
-  --border-color-hover: rgba(108, 99, 255, 0.35);
+  --border-color: rgba(0, 255, 65, 0.12);
+  --border-color-hover: rgba(0, 255, 65, 0.35);
 
-  --success: #10b981;
+  --success: #00FF41;
   --warning: #f59e0b;
 
   /* Spacing */
@@ -91,8 +91,10 @@ input, textarea {
   --space-5xl: 8rem;
 
   /* Typography */
-  --font-heading: 'Outfit', sans-serif;
-  --font-body: 'Inter', sans-serif;
+  --font-heading-old: 'Share Tech Mono', 'Courier New', monospace;
+  --font-heading:  "Silkscreen", sans-serif;
+  --font-body-old: 'Inter', sans-serif;
+  --font-body: 'Turret Road', sans-serif;
 
   --fs-xs: 0.75rem;
   --fs-sm: 0.875rem;
@@ -111,6 +113,10 @@ input, textarea {
   --fw-bold: 700;
   --fw-extrabold: 800;
 
+  --ls-base: 0.05em;
+  --ls-md: 0.1em;
+  --ls-lg: 0.15em;
+
   /* Border Radius */
   --radius-sm: 0.375rem;
   --radius-md: 0.5rem;
@@ -119,16 +125,16 @@ input, textarea {
   --radius-2xl: 1.5rem;
   --radius-full: 9999px;
 
-  /* Shadows */
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.5);
-  --shadow-glow: 0 0 30px rgba(108, 99, 255, 0.15);
-  --shadow-glow-lg: 0 0 60px rgba(108, 99, 255, 0.2);
+  /* Shadows — Matrix green glow */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.7);
+  --shadow-glow: 0 0 30px rgba(0, 255, 65, 0.1);
+  --shadow-glow-lg: 0 0 60px rgba(0, 255, 65, 0.15);
 
   /* Transitions */
   --transition-fast: 0.15s ease;
-  --transition-base: 0.3s ease;
+  --transition-base: 0.3s ease-in-out;
   --transition-slow: 0.5s ease;
 
   /* Layout */
@@ -138,7 +144,7 @@ input, textarea {
 
 /* ===== Scrollbar ===== */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -148,21 +154,24 @@ input, textarea {
 ::-webkit-scrollbar-thumb {
   background: var(--bg-tertiary);
   border-radius: var(--radius-full);
+  border: 1px solid rgba(0, 255, 65, 0.1);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--accent);
+  background: var(--accent-dark);
+  box-shadow: 0 0 8px rgba(0, 255, 65, 0.3);
 }
 
 /* ===== Selection ===== */
 ::selection {
-  background: var(--accent);
+  background: rgba(0, 255, 65, 0.3);
   color: var(--text-primary);
 }
 
 /* ===== Section base ===== */
 section {
   padding: var(--space-5xl) var(--space-xl);
+  position: relative;
 }
 
 .section-container {
@@ -171,28 +180,49 @@ section {
 }
 
 .section-label {
-  font-family: var(--font-body);
+  font-family: var(--font-heading);
   font-size: var(--fs-sm);
-  font-weight: var(--fw-semibold);
+  font-weight: var(--fw-regular);
   color: var(--accent);
   text-transform: uppercase;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.2em;
   margin-bottom: var(--space-sm);
+  display: inline-block;
+}
+
+.section-label::before {
+  content: '> ';
+  opacity: 0.6;
 }
 
 .section-title {
   font-family: var(--font-heading);
   font-size: var(--fs-3xl);
-  font-weight: var(--fw-bold);
+  font-weight: var(--fw-regular);
   color: var(--text-primary);
   margin-bottom: var(--space-lg);
+  text-shadow: 0 0 20px rgba(0, 255, 65, 0.15);
 }
 
 .section-description {
-  font-size: var(--fs-md);
+  font-family: var(--font-body);
+  letter-spacing: var(--ls-md);
   color: var(--text-secondary);
   max-width: 600px;
   line-height: 1.7;
+}
+
+/* ===== Grid overlay ===== */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0, 255, 65, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 65, 0.02) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+  z-index: 0;
 }
 
 @media (max-width: 768px) {

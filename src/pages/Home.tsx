@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import MatrixRain from '../components/MatrixRain/MatrixRain';
 import Navbar from '../components/Navbar/Navbar';
 import Hero from '../components/Hero/Hero';
 import About from '../components/About/About';
@@ -18,6 +19,7 @@ const Home: React.FC = () => {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.4 }}
     >
+      <MatrixRain />
       <Navbar />
       <main>
         <Hero />

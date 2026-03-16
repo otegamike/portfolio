@@ -8,10 +8,10 @@ interface HighlightCard {
 }
 
 const highlights: HighlightCard[] = [
-  { value: '3+', label: 'Years Learning Development', icon: '📅' },
-  { value: '10+', label: 'Projects Built', icon: '🚀' },
-  { value: '∞', label: 'Problem Solving', icon: '🧩' },
-  { value: '⚙️', label: 'System Thinking', icon: '' },
+  { value: '3+', label: 'Years Learning Development', icon: '' },
+  { value: '20+', label: 'Projects Built', icon: '' },
+  { value: '∞', label: 'Problem Solving', icon: '' },
+  { value: '100%', label: 'System Thinking', icon: '' },
 ];
 
 const containerVariants = {
@@ -74,7 +74,8 @@ const About: React.FC = () => {
                   key={i}
                   className="about__card"
                   variants={fadeUp}
-                  whileHover={{ y: -6, boxShadow: '0 12px 40px rgba(108,99,255,0.15)' }}
+                  transition={{duration: 0.3, ease: "easeInOut"}}
+                  whileHover={{ y: -6, boxShadow: '0 12px 40px var(--accent-glow)'}}
                 >
                   <span className="about__card-icon">
                     {h.icon || h.value}

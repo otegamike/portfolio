@@ -53,7 +53,7 @@ const Hero: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.5 }}
         >
-          Frontend Developer
+          Fullstack Developer
         </motion.h2>
 
         <motion.p

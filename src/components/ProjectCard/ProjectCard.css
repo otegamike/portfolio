@@ -34,6 +34,8 @@
 }
 
 .project-card__desc {
+  font-family: var(--font-body);
+  letter-spacing: var(--ls-lg);
   font-size: var(--fs-sm);
   color: var(--text-secondary);
   line-height: 1.7;
@@ -48,9 +50,12 @@
 }
 
 .project-card__feature {
+  font-family: var(--font-body);
+  letter-spacing: var(--ls-lg);
   font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
   color: var(--accent-light);
-  background: rgba(108, 99, 255, 0.1);
+  background: hsl(120, 60%, 10%);
   padding: 0.25rem 0.6rem;
   border-radius: var(--radius-sm);
 }

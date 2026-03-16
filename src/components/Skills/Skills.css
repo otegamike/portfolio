@@ -43,10 +43,12 @@
   align-items: center;
   gap: var(--space-xs);
   padding: 0.5rem 1rem;
+  font-family: var(--font-body);
   font-size: var(--fs-sm);
   font-weight: var(--fw-medium);
+  letter-spacing: var(--ls-md);
   color: var(--text-secondary);
-  background: rgba(108, 99, 255, 0.08);
+  background: hsl(120, 60%, 10%);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-full);
   cursor: default;

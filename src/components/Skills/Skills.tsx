@@ -54,7 +54,7 @@ const cardVariants = {
 
 const skillVariants = {
   hidden: { opacity: 0, scale: 0.8 },
-  visible: { opacity: 1, scale: 1, transition: { duration: 0.35 } },
+  visible: { opacity: 1, scale: 0.9, transition: { duration: 0.35 } },
 };
 
 const Skills: React.FC = () => {
@@ -93,7 +93,7 @@ const Skills: React.FC = () => {
                       className="skills__tag"
                       variants={skillVariants}
                       whileHover={{
-                        scale: 1.08,
+                        scale: 1,
                         backgroundColor: 'rgba(108, 99, 255, 0.18)',
                       }}
                     >
