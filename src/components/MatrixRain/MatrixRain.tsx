@@ -1,9 +1,8 @@
 import { useEffect, useRef } from 'react';
-import './MatrixRain.css';
 
 const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%^&*()_+-=[]{}|;:<>?/~';
 const FONT_SIZE = 14;
-const COLUMN_GAP = 20; // px between columns
+const COLUMN_GAP = 20;
 
 const MatrixRain: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -11,20 +10,25 @@ const MatrixRain: React.FC = () => {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', { alpha: false }); // Optimization: Disable alpha for the main context
     if (!ctx) return;
 
     let animFrameId: number;
     let columns: number[] = [];
     let columnSpeeds: number[] = [];
     let lastTime = 0;
-    const interval = 50; // ms between frames (~20fps for performance)
+    const interval = 1000 / 30; // Solid 30fps
 
     const resize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      const colCount = Math.floor(canvas.width / COLUMN_GAP);
-      // Preserve existing drops, init new ones
+      // Scale for high-DPI screens to prevent blur/lag
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = window.innerWidth * dpr;
+      canvas.height = window.innerHeight * dpr;
+      canvas.style.width = `${window.innerWidth}px`;
+      canvas.style.height = `${window.innerHeight}px`;
+      ctx.scale(dpr, dpr);
+
+      const colCount = Math.floor(window.innerWidth / COLUMN_GAP);
       const newColumns: number[] = [];
       const newSpeeds: number[] = [];
       for (let i = 0; i < colCount; i++) {
@@ -33,10 +37,13 @@ const MatrixRain: React.FC = () => {
       }
       columns = newColumns;
       columnSpeeds = newSpeeds;
+      
+      // Font only needs to be set once per resize
+      ctx.font = `${FONT_SIZE}px 'Share Tech Mono', monospace`;
     };
 
-    resize();
     window.addEventListener('resize', resize);
+    resize();
 
     const draw = (timestamp: number) => {
       animFrameId = requestAnimationFrame(draw);
@@ -44,52 +51,43 @@ const MatrixRain: React.FC = () => {
       if (timestamp - lastTime < interval) return;
       lastTime = timestamp;
 
-      // Fade previous frame
+      // 1. Efficient Fade: Opaque black with low alpha fill
       ctx.fillStyle = 'rgba(5, 5, 5, 0.15)';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
 
-      ctx.font = `${FONT_SIZE}px 'Share Tech Mono', monospace`;
-
+      // 2. Performance: Group drawing by color to minimize fillStyle switches
+      ctx.fillStyle = '#00FF41';
       for (let i = 0; i < columns.length; i++) {
         const char = CHARS[Math.floor(Math.random() * CHARS.length)];
         const x = i * COLUMN_GAP;
         const y = columns[i] * FONT_SIZE;
 
-        // Occasional bright flash character
-        if (Math.random() > 0.96) {
-          ctx.fillStyle = '#ffffff';
-          ctx.shadowColor = '#00FF41';
-          ctx.shadowBlur = 12;
-        } else {
-          ctx.fillStyle = '#00FF41';
-          ctx.shadowColor = 'transparent';
-          ctx.shadowBlur = 0;
-        }
-
+        // Draw standard characters
         ctx.fillText(char, x, y);
-        ctx.shadowBlur = 0;
 
-        // Reset column when it goes off screen, with randomness
-        if (y > canvas.height && Math.random() > 0.975) {
+        if (y > window.innerHeight && Math.random() > 0.98) {
           columns[i] = 0;
-          columnSpeeds[i] = 0.5 + Math.random() * 1.5;
         }
-
         columns[i] += columnSpeeds[i];
+      }
+
+      // 3. Selective "Glow": Draw highlights in a separate pass
+      ctx.fillStyle = '#ffffff';
+      for (let i = 0; i < columns.length; i++) {
+        if (Math.random() > 0.98) {
+          const char = CHARS[Math.floor(Math.random() * CHARS.length)];
+          ctx.fillText(char, i * COLUMN_GAP, columns[i] * FONT_SIZE);
+        }
       }
     };
 
     animFrameId = requestAnimationFrame(draw);
 
-    // Pause when tab is hidden
     const handleVisibility = () => {
-      if (document.hidden) {
-        cancelAnimationFrame(animFrameId);
-      } else {
-        lastTime = 0;
-        animFrameId = requestAnimationFrame(draw);
-      }
+      if (document.hidden) cancelAnimationFrame(animFrameId);
+      else { lastTime = 0; animFrameId = requestAnimationFrame(draw); }
     };
+    
     document.addEventListener('visibilitychange', handleVisibility);
 
     return () => {
@@ -99,7 +97,7 @@ const MatrixRain: React.FC = () => {
     };
   }, []);
 
-  return <canvas ref={canvasRef} className="matrix-rain" />;
+  return <canvas ref={canvasRef} className='matrix-rain' style={{ display: 'block', position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 0 }} />;
 };
 
 export default MatrixRain;

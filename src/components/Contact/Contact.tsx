@@ -122,7 +122,7 @@ const Contact: React.FC = () => {
                 </p>
                 <div className="contact__socials">
                   <motion.a
-                    href="https://github.com"
+                    href="https://github.com/otegamike"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="contact__social"
@@ -135,7 +135,7 @@ const Contact: React.FC = () => {
                     GitHub
                   </motion.a>
                   <motion.a
-                    href="https://linkedin.com"
+                    href="https://linkedin.com/in/mike-otega"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="contact__social"

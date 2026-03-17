@@ -1,3 +1,4 @@
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import './ProjectCard.css';
 
@@ -9,6 +10,7 @@ export interface ProjectCardProps {
   liveUrl?: string;
   githubUrl?: string;
   color?: string;
+  previews?: string[];
 }
 
 const ProjectCard: React.FC<ProjectCardProps> = ({
@@ -19,7 +21,38 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   liveUrl,
   githubUrl,
   color = 'var(--accent)',
+  previews = [],
 }) => {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const startCycling = useCallback(() => {
+    if (previews.length <= 1) return;
+    intervalRef.current = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % previews.length);
+    }, 2000);
+  }, [previews.length]);
+
+  const stopCycling = useCallback(() => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isHovered) {
+      startCycling();
+    } else {
+      stopCycling();
+      setActiveIndex(0);
+    }
+    return stopCycling;
+  }, [isHovered, startCycling, stopCycling]);
+
+  const hasPreviews = previews.length > 0;
+
   return (
     <motion.article
       className="project-card"
@@ -28,9 +61,52 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
         visible: { opacity: 1, y: 0, transition: { duration: 0.55 } },
       }}
       whileHover={{ y: -8 }}
+      onHoverStart={() => setIsHovered(true)}
+      onHoverEnd={() => setIsHovered(false)}
     >
-      {/* Color accent bar */}
       <div className="project-card__accent" style={{ background: color }} />
+      {/* Preview carousel or accent bar */}
+      {hasPreviews ? (
+        <div className="project-card__carousel">
+          {previews.map((src, i) => (
+            <img
+              key={src}
+              src={src}
+              alt={`${title} preview ${i + 1}`}
+              className={`project-card__carousel-img ${
+                i === activeIndex ? 'project-card__carousel-img--active' : ''
+              }`}
+              loading="lazy"
+            />
+          ))}
+          {/* Dot indicators */}
+          {previews.length > 1 && (
+            <div className="project-card__dots">
+              {previews.map((_, i) => (
+                <button
+                  key={i}
+                  className={`project-card__dot ${
+                    i === activeIndex ? 'project-card__dot--active' : ''
+                  }`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setActiveIndex(i);
+                  }}
+                  aria-label={`View preview ${i + 1}`}
+                />
+              ))}
+            </div>
+          )}
+          {/* Scanline overlay on hover */}
+          <div
+            className={`project-card__scanline ${
+              isHovered ? 'project-card__scanline--visible' : ''
+            }`}
+          />
+        </div>
+      ) : (
+        <div className="project-card__accent" style={{ background: color }} />
+      )}
 
       <div className="project-card__body">
         <h3 className="project-card__title">{title}</h3>

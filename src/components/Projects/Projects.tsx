@@ -5,6 +5,15 @@ import './Projects.css';
 const projects: ProjectCardProps[] = [
   {
     title: 'Shopperific',
+    previews: [
+      'https://res.cloudinary.com/dgaprn7ur/image/upload/v1773704290/shopperific-1_x65idc.png',
+      'https://res.cloudinary.com/dgaprn7ur/image/upload/v1773704289/shopperific-7_y0g1ne.png',
+      'https://res.cloudinary.com/dgaprn7ur/image/upload/v1773704289/shopperific-6_ubexsn.png',
+      'https://res.cloudinary.com/dgaprn7ur/image/upload/v1773704289/shopperific-5_frfuzv.png',
+      'https://res.cloudinary.com/dgaprn7ur/image/upload/v1773704289/shopperific-4_be8cpr.png',
+      'https://res.cloudinary.com/dgaprn7ur/image/upload/v1773704289/shopperific-03_zbd208.png',
+      'https://res.cloudinary.com/dgaprn7ur/image/upload/v1773704289/shopperific-2_iceyay.png',
+    ],
     description:
       'A full-featured ecommerce platform with product browsing, search, cart management, and order processing. Built with a modern React frontend and a Node.js/Express backend integrated with MongoDB.',
     techStack: ['React', 'TypeScript', 'Node.js', 'Express', 'MongoDB'],
@@ -21,8 +30,14 @@ const projects: ProjectCardProps[] = [
   },
   {
     title: 'Inkly',
+    previews: [
+      'https://res.cloudinary.com/dgaprn7ur/image/upload/v1773706893/inkly-1_ylejp9.png',
+      'https://res.cloudinary.com/dgaprn7ur/image/upload/v1773706891/inkly-3_z3tssa.png',
+      'https://res.cloudinary.com/dgaprn7ur/image/upload/v1773706887/inkly-2_ckac48.png',
+      'https://res.cloudinary.com/dgaprn7ur/image/upload/v1773706880/inkly-4_x4owxw.png'
+    ],
     description:
-      'A full-featured ecommerce platform with product browsing, search, cart management, and order processing. Built with a modern React frontend and a Node.js/Express backend integrated with MongoDB.',
+    'Inkly is a blog with a modern design and a user-friendly interface. It is built with a modern React frontend and a Node.js/Express backend integrated with MongoDB.',
     techStack: ['React', 'TypeScript', 'Node.js', 'Express', 'MongoDB'],
     features: [
       'Product Search',
@@ -31,12 +46,15 @@ const projects: ProjectCardProps[] = [
       'Dashboard Analytics',
       'Backend Integration',
     ],
-    liveUrl: 'https://shopperific.netlify.app/',
-    githubUrl: 'https://github.com/otegamike/shopperific',
+    liveUrl: 'https://inklyapp.netlify.app/',
+    githubUrl: 'https://github.com/otegamike/inkly',
     color: 'linear-gradient(135deg, hsl(130, 34%, 55%), hsl(30, 90%, 45%))',
   },
   {
-    title: 'React Dashboard System',
+    title: 'Bento Gridy',
+    previews: [
+      'https://res.cloudinary.com/dgaprn7ur/image/upload/v1773706753/bento-grid-01_qj1te8.png'
+    ],
     description:
       'An interactive admin dashboard featuring analytics visualization, shop management, order tracking, and product statistics. Designed for scalability with a reusable component architecture.',
     techStack: ['React', 'TypeScript', 'CSS Grid', 'REST APIs', 'Chart.js'],
@@ -47,15 +65,21 @@ const projects: ProjectCardProps[] = [
       'Real-time Stats',
       'Role-based Views',
     ],
-    liveUrl: '#',
-    githubUrl: '#',
+    liveUrl: 'https://bento-gridy.netlify.app/',
+    githubUrl: 'https://github.com/otegamike/bento-grid',
     color: 'linear-gradient(135deg, #3b82f6, #06b6d4)',
   },
   {
-    title: 'To-Do List App',
+    title: 'Noterrific',
+    previews: [
+      'https://res.cloudinary.com/dgaprn7ur/image/upload/v1773706141/Noterrific-1_zv84vj.png',
+      'https://res.cloudinary.com/dgaprn7ur/image/upload/v1773706130/Noterrific-4_gjbjnq.png',
+      'https://res.cloudinary.com/dgaprn7ur/image/upload/v1773706163/Noterrific-3_svn2lq.png',
+      'https://res.cloudinary.com/dgaprn7ur/image/upload/v1773706163/Noterrific-3_svn2lq.png'
+    ],
     description:
-      'A polished task management application with rich animations, categorized notes, and an intuitive drag-and-drop interface. Demonstrates strong Framer Motion proficiency.',
-    techStack: ['React', 'TypeScript', 'Framer Motion', 'LocalStorage'],
+      'A polished task management application with rich animations, categorized notes, and an intuitive drag-and-drop interface. Built with a modern React frontend and a Node.js/Express backend integrated with MongoDB. Demonstrates strong Framer Motion proficiency.',
+    techStack: ['React', 'TypeScript', 'Node.js', 'Express', 'MongoDB', 'Framer Motion', 'LocalStorage'],
     features: [
       'Animated Transitions',
       'Drag & Drop',
@@ -63,8 +87,8 @@ const projects: ProjectCardProps[] = [
       'Persistent Storage',
       'Micro-interactions',
     ],
-    liveUrl: '#',
-    githubUrl: '#',
+    liveUrl: 'http://noterrific.netlify.app/',
+    githubUrl: 'https://github.com/otegamike/noterrific',
     color: 'linear-gradient(135deg, #10b981, #34d399)',
   },
 ];

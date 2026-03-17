@@ -86,10 +86,9 @@ const Experience: React.FC = () => {
                   key={i}
                   className="experience__item"
                   variants={itemVariants}
-                  whileHover={{ x: 6 }}
                 >
                   <div className="experience__dot" />
-                  <div className="experience__card">
+                  <motion.div whileHover={{ x: 8 }} className="experience__card">
                     <h3 className="experience__role">{exp.role}</h3>
                     <p className="experience__desc">{exp.description}</p>
                     <div className="experience__techs">
@@ -99,7 +98,7 @@ const Experience: React.FC = () => {
                         </span>
                       ))}
                     </div>
-                  </div>
+                  </motion.div>
                 </motion.div>
               ))}
             </motion.div>

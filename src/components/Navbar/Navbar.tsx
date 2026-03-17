@@ -60,7 +60,7 @@ const Navbar: React.FC = () => {
       <div className="navbar__inner">
         <a href="#home" className="navbar__logo" onClick={() => handleClick('#home')}>
           <span className="navbar__logo-bracket">&lt;</span>
-          Mike
+          MikeImi
           <span className="navbar__logo-accent">.dev</span>
           <span className="navbar__logo-bracket"> /&gt;</span>
         </a>

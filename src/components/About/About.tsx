@@ -46,7 +46,7 @@ const About: React.FC = () => {
           <div className="about__grid">
             <motion.div className="about__bio" variants={fadeUp}>
               <p>
-                I'm a frontend developer passionate about crafting clean, scalable
+                I'm a fullstack developer passionate about crafting clean, scalable
                 user interfaces. My focus is on <strong>React</strong> and{' '}
                 <strong>TypeScript</strong>, and I love turning complex problems
                 into intuitive, well-architected solutions.

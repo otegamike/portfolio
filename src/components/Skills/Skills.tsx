@@ -94,7 +94,7 @@ const Skills: React.FC = () => {
                       variants={skillVariants}
                       whileHover={{
                         scale: 1,
-                        backgroundColor: 'rgba(108, 99, 255, 0.18)',
+                        backgroundColor: 'hsl(120, 70%, 15%)',
                       }}
                     >
                       {skill.name}

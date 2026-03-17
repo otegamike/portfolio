@@ -14,7 +14,7 @@ const Footer: React.FC = () => {
         <div className="footer__left">
           <span className="footer__name">
             <span className="footer__bracket">&lt;</span>
-            Mike Imi
+            MikeImi
             <span className="footer__bracket"> /&gt;</span>
           </span>
           <span className="footer__copy">
@@ -24,7 +24,7 @@ const Footer: React.FC = () => {
 
         <div className="footer__links">
           <motion.a
-            href="https://github.com"
+            href="https://github.com/otegamike"
             target="_blank"
             rel="noopener noreferrer"
             className="footer__link"
@@ -36,7 +36,7 @@ const Footer: React.FC = () => {
             GitHub
           </motion.a>
           <motion.a
-            href="https://linkedin.com"
+            href="https://linkedin.com/in/mike-otega"
             target="_blank"
             rel="noopener noreferrer"
             className="footer__link"
