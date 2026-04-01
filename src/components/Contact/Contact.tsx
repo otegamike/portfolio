@@ -126,7 +126,7 @@ const Contact: React.FC = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="contact__social"
-                    whileHover={{ scale: 1.1 }}
+                    whileHover={{ scale: 1.03 }}
                     whileTap={{ scale: 0.95 }}
                   >
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
@@ -139,7 +139,7 @@ const Contact: React.FC = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="contact__social"
-                    whileHover={{ scale: 1.1 }}
+                    whileHover={{ scale: 1.03 }}
                     whileTap={{ scale: 0.95 }}
                   >
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">

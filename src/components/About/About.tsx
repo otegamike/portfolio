@@ -8,10 +8,10 @@ interface HighlightCard {
 }
 
 const highlights: HighlightCard[] = [
-  { value: '3+', label: 'Years Learning Development', icon: '' },
-  { value: '20+', label: 'Projects Built', icon: '' },
-  { value: '∞', label: 'Problem Solving', icon: '' },
-  { value: '100%', label: 'System Thinking', icon: '' },
+  { value: '4+', label: 'Years Learning Development', icon: '' },
+  { value: '30+', label: 'Projects Built', icon: '' },
+  { value: '15+', label: 'Happy Clients', icon: '' },
+  { value: '10+', label: 'Open Source Contrib.', icon: '' },
 ];
 
 const containerVariants = {

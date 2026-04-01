@@ -70,6 +70,27 @@ const projects: ProjectCardProps[] = [
     color: 'linear-gradient(135deg, #3b82f6, #06b6d4)',
   },
   {
+    title: 'Open Clipboard',
+    previews: [
+      'https://res.cloudinary.com/dgaprn7ur/image/upload/v1775033315/Open-Clipboard-1_p0dech.png',
+      'https://res.cloudinary.com/dgaprn7ur/image/upload/v1775033308/Open-Clipboard-2_esebfp.png',
+      'https://res.cloudinary.com/dgaprn7ur/image/upload/v1775033307/Open-Clipboard-3_nilu1u.png'
+    ],
+    description:
+      'Open Clipboard is the fastest way to create password-protected text clipboards. Share with your team, access from anywhere, and keep your data secure.',
+    techStack: ['React', 'TypeScript', 'Node.js', 'Express', 'MongoDB', 'Framer Motion'],
+    features: [
+      'Password Protection',
+      'Secure Storage',
+      'Unlimited Clipboards',
+      'Real-time Sync',
+      'Micro-interactions',
+    ],
+    liveUrl: 'http://open-clipboard.netlify.app/',
+    githubUrl: 'https://github.com/otegamike/open-clipboard',
+    color: 'linear-gradient(135deg, #10b981, #34d399)',
+  },
+  {
     title: 'Noterrific',
     previews: [
       'https://res.cloudinary.com/dgaprn7ur/image/upload/v1773706141/Noterrific-1_zv84vj.png',
@@ -90,7 +111,7 @@ const projects: ProjectCardProps[] = [
     liveUrl: 'http://noterrific.netlify.app/',
     githubUrl: 'https://github.com/otegamike/noterrific',
     color: 'linear-gradient(135deg, #10b981, #34d399)',
-  },
+  }
 ];
 
 const containerVariants = {
