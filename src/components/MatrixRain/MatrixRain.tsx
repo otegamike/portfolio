@@ -1,9 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 
 const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%^&*()_+-=[]{}|;:<>?/~';
-const FONT_SIZE = 14;
+const FONT_SIZE = 13;
 
-// Fix 2: Wider gaps on mobile → fewer columns → fewer render calls
 const getColumnGap = (width: number) => (width < 768 ? 24 : 20);
 
 const MatrixRain: React.FC = () => {
