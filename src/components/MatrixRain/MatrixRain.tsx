@@ -1,19 +1,10 @@
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%^&*()_+-=[]{}|;:<>?/~';
 const FONT_SIZE = 14;
 
-// Fix 4: Pre-compute a character pool to avoid per-frame Math.random indexing
-const CHAR_POOL_SIZE = 256; // power of 2 for fast bitwise wrap
-const CHAR_POOL: string[] = [];
-for (let i = 0; i < CHAR_POOL_SIZE; i++) {
-  CHAR_POOL[i] = CHARS[Math.floor(Math.random() * CHARS.length)];
-}
-let poolIndex = 0;
-const nextChar = () => CHAR_POOL[poolIndex++ & (CHAR_POOL_SIZE - 1)];
-
-// Fix 2: Wider gaps on mobile → fewer columns → fewer fillText calls
-const getColumnGap = (width: number) => (width < 768 ? 28 : 20);
+// Fix 2: Wider gaps on mobile → fewer columns → fewer render calls
+const getColumnGap = (width: number) => (width < 768 ? 24 : 20);
 
 const MatrixRain: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -30,39 +21,97 @@ const MatrixRain: React.FC = () => {
     let lastTime = 0;
     const interval = 1000 / 30; // 30 fps target
 
-    // Fix 5: Cache dimensions outside the draw loop
     let cachedWidth = 0;
     let cachedHeight = 0;
     let columnGap = 20;
 
+    // --- Back-Buffer Setup ---
+    const offCanvas = document.createElement('canvas');
+    const offCtx = offCanvas.getContext('2d', { alpha: false });
+    
+    // --- Atlas (Offscreen Canvas) Setup ---
+    let atlasCanvas: HTMLCanvasElement | null = null;
+    let atlasCellWidth = 0;
+    let atlasCellHeight = 0;
+    let currentDpr = 1;
+
+    const createAtlas = (dpr: number) => {
+      const scaledFontSize = FONT_SIZE * dpr;
+      const ac = document.createElement('canvas');
+      const actx = ac.getContext('2d', { alpha: true });
+      if (!actx) return;
+
+      const cellW = scaledFontSize;
+      const cellH = scaledFontSize;
+      ac.width = CHARS.length * cellW;
+      ac.height = cellH * 2; // Two rows: 0 (Green), 1 (White)
+
+      actx.font = `${scaledFontSize}px 'Share Tech Mono', monospace`;
+      actx.textBaseline = 'top';
+      actx.textAlign = 'center';
+
+      // Draw Green Characters
+      actx.fillStyle = '#00FF41';
+      for (let i = 0; i < CHARS.length; i++) {
+        actx.fillText(CHARS[i], i * cellW + cellW / 2, 0);
+      }
+
+      // Draw White Characters
+      actx.fillStyle = '#ffffff';
+      for (let i = 0; i < CHARS.length; i++) {
+        actx.fillText(CHARS[i], i * cellW + cellW / 2, cellH);
+      }
+
+      atlasCanvas = ac;
+      atlasCellWidth = cellW;
+      atlasCellHeight = cellH;
+    };
+
     const resize = () => {
-      // Fix 1: Cap DPR at 2 to avoid massive backing buffers on 3× phones
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      currentDpr = Math.min(window.devicePixelRatio || 1, 2);
       cachedWidth = window.innerWidth;
       cachedHeight = window.innerHeight;
       columnGap = getColumnGap(cachedWidth);
 
-      canvas.width = cachedWidth * dpr;
-      canvas.height = cachedHeight * dpr;
+      // Main visible canvas
+      canvas.width = cachedWidth * currentDpr;
+      canvas.height = cachedHeight * currentDpr;
       canvas.style.width = `${cachedWidth}px`;
       canvas.style.height = `${cachedHeight}px`;
-      ctx.scale(dpr, dpr);
+
+      // Back-buffer canvas
+      offCanvas.width = cachedWidth * currentDpr;
+      offCanvas.height = cachedHeight * currentDpr;
+      
+      if (offCtx) {
+        // Reset transform before re-scaling, in case resize is called multiple times
+        offCtx.resetTransform();
+        offCtx.scale(currentDpr, currentDpr);
+        offCtx.fillStyle = '#050505';
+        offCtx.fillRect(0, 0, cachedWidth, cachedHeight);
+      }
+
+      createAtlas(currentDpr);
 
       const colCount = Math.floor(cachedWidth / columnGap);
       const newColumns: number[] = [];
       const newSpeeds: number[] = [];
+      
       for (let i = 0; i < colCount; i++) {
         newColumns[i] = columns[i] ?? Math.random() * -100;
         newSpeeds[i] = columnSpeeds[i] ?? 0.5 + Math.random() * 1.5;
       }
       columns = newColumns;
       columnSpeeds = newSpeeds;
-
-      ctx.font = `${FONT_SIZE}px 'Share Tech Mono', monospace`;
     };
 
     window.addEventListener('resize', resize);
-    resize();
+    
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(resize);
+    } else {
+      resize();
+    }
 
     const draw = (timestamp: number) => {
       animFrameId = requestAnimationFrame(draw);
@@ -70,34 +119,38 @@ const MatrixRain: React.FC = () => {
       if (timestamp - lastTime < interval) return;
       lastTime = timestamp;
 
-      // Fade with cached dimensions
-      ctx.fillStyle = 'rgba(5, 5, 5, 0.15)';
-      ctx.fillRect(0, 0, cachedWidth, cachedHeight);
+      if (!offCtx || !atlasCanvas) return;
 
-      // Fix 3: Single-pass rendering — green chars with inline 2% white glow
-      ctx.fillStyle = '#00FF41';
+      // Darken the back-buffer
+      offCtx.fillStyle = 'rgba(5, 5, 5, 0.15)';
+      offCtx.fillRect(0, 0, cachedWidth, cachedHeight);
+
+      // Draw the characters to the back-buffer
       for (let i = 0; i < columns.length; i++) {
-        const char = nextChar(); // Fix 4: pool lookup instead of Math.random
+        const charIndex = Math.floor(Math.random() * CHARS.length);
         const x = i * columnGap;
         const y = columns[i] * FONT_SIZE;
+        const isWhite = Math.random() > 0.98;
 
-        // Inline glow: 2% chance → white highlight, otherwise green
-        if (Math.random() > 0.98) {
-          ctx.fillStyle = '#ffffff';
-          ctx.fillText(char, x, y);
-          ctx.fillStyle = '#00FF41';
-        } else {
-          ctx.fillText(char, x, y);
-        }
+        const sx = charIndex * atlasCellWidth;
+        const sy = isWhite ? atlasCellHeight : 0;
+
+        offCtx.drawImage(
+          atlasCanvas,
+          sx, sy, atlasCellWidth, atlasCellHeight, // Source physical pixels
+          x, y, FONT_SIZE, FONT_SIZE // Destination logical coords
+        );
 
         if (y > cachedHeight && Math.random() > 0.98) {
           columns[i] = 0;
         }
         columns[i] += columnSpeeds[i];
       }
+
+      // Blit everything from back-buffer to visible canvas
+      ctx.drawImage(offCanvas, 0, 0);
     };
 
-    // Fix 6: IntersectionObserver — pause animation when canvas is off-screen
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -116,7 +169,6 @@ const MatrixRain: React.FC = () => {
     );
     observer.observe(canvas);
 
-    // Start the animation
     animFrameId = requestAnimationFrame(draw);
 
     const handleVisibility = () => {
@@ -151,6 +203,7 @@ const MatrixRain: React.FC = () => {
         width: '100%',
         height: '100%',
         zIndex: 0,
+        background: '#050505', // Ensures a fallback
       }}
     />
   );
