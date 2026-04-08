@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import SectionLabel from '../SectionLabel/SectionLabel';
 import './About.css';
 
 interface HighlightCard {
@@ -36,9 +37,9 @@ const About: React.FC = () => {
           viewport={{ once: true, margin: '-80px' }}
           variants={containerVariants}
         >
-          <motion.span className="section-label" variants={fadeUp}>
+          <SectionLabel variants={fadeUp}>
             About Me
-          </motion.span>
+          </SectionLabel>
           <motion.h2 className="section-title" variants={fadeUp}>
             Building digital experiences with modern tools
           </motion.h2>

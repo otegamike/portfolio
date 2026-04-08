@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import SectionLabel from '../SectionLabel/SectionLabel';
 import './Skills.css';
 
 interface Skill {
@@ -67,9 +68,9 @@ const Skills: React.FC = () => {
           viewport={{ once: true, margin: '-80px' }}
           variants={containerVariants}
         >
-          <motion.span className="section-label" variants={cardVariants}>
+          <SectionLabel variants={cardVariants}>
             Skills
-          </motion.span>
+          </SectionLabel>
           <motion.h2 className="section-title" variants={cardVariants}>
             Technologies I work with
           </motion.h2>

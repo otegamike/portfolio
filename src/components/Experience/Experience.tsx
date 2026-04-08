@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import SectionLabel from '../SectionLabel/SectionLabel';
 import './Experience.css';
 
 interface ExperienceItem {
@@ -59,9 +60,9 @@ const Experience: React.FC = () => {
           viewport={{ once: true, margin: '-80px' }}
           variants={containerVariants}
         >
-          <motion.span className="section-label" variants={fadeUp}>
+          <SectionLabel variants={fadeUp}>
             Experience
-          </motion.span>
+          </SectionLabel>
           <motion.h2 className="section-title" variants={fadeUp}>
             My development journey
           </motion.h2>

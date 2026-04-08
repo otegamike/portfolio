@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import SectionLabel from '../SectionLabel/SectionLabel';
 import './Contact.css';
 
 const containerVariants = {
@@ -37,9 +38,9 @@ const Contact: React.FC = () => {
           viewport={{ once: true, margin: '-80px' }}
           variants={containerVariants}
         >
-          <motion.span className="section-label" variants={fadeUp}>
+          <SectionLabel variants={fadeUp}>
             Contact
-          </motion.span>
+          </SectionLabel>
           <motion.h2 className="section-title" variants={fadeUp}>
             Let's work together
           </motion.h2>

@@ -196,6 +196,17 @@ section {
   opacity: 0.6;
 }
 
+.section-label::after {
+  content: '_';
+  margin-left: 2px;
+  animation: blink-cursor 1s step-end infinite;
+}
+
+@keyframes blink-cursor {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
 .section-title {
   font-family: var(--font-heading);
   font-size: var(--fs-3xl);

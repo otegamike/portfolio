@@ -1,17 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
+import type { IProject as ProjectCardProps } from '../../types/projectInterface';
 import './ProjectCard.css';
-
-export interface ProjectCardProps {
-  title: string;
-  description: string;
-  techStack: string[];
-  features: string[];
-  liveUrl?: string;
-  githubUrl?: string;
-  color?: string;
-  previews?: string[];
-}
 
 const ProjectCard: React.FC<ProjectCardProps> = ({
   title,

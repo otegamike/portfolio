@@ -1,25 +1,60 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import SectionLabel from '../../components/SectionLabel/SectionLabel';
 import './Admin.css';
+
+// services
+import { getStats } from '../../services/statsServices';
+import { addNewProject } from '../../services/projectServices';
+import type { IProject, projectSchema } from '../../types/projectInterface';
+import { adminLogin } from '../../services/adminLogin';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+
+const emptyStats = {
+  siteViews: 0,
+  projectsCompleted: 0,
+  messagesReceived: 0,
+  yearsOfExperience: 0
+}
+
+const emptyFormData: IProject = {
+  title: '',
+  previews: [],
+  description: '',
+  techStack: [],
+  features: [],
+  liveUrl: '',
+  githubUrl: '',
+  color: '',
+}
+
+export const testFormData: IProject = {
+    title: 'Shopperific',
+    previews: ['https://res.cloudinary.com/dgaprn7ur/image/upload/v1773704290/shopperific-1_x65idc.png', 'https://res.cloudinary.com/dgaprn7ur/image/upload/v1773704289/shopperific-7_y0g1ne.png', 'https://res.cloudinary.com/dgaprn7ur/image/upload/v1773704289/shopperific-6_ubexsn.png', 'https://res.cloudinary.com/dgaprn7ur/image/upload/v1773704289/shopperific-5_frfuzv.png', 'https://res.cloudinary.com/dgaprn7ur/image/upload/v1773704289/shopperific-4_be8cpr.png', 'https://res.cloudinary.com/dgaprn7ur/image/upload/v1773704289/shopperific-03_zbd208.png'],
+    description: 'A full-featured ecommerce platform with product browsing, search, cart management, and order processing. Built with a modern React frontend and a Node.js/Express backend integrated with MongoDB.',
+    techStack: ['React', 'TypeScript', 'Node.js', 'Express', 'MongoDB'],
+    features: ['Product Search', 'Shopping Cart', 'Order Management', 'Dashboard Analytics', 'Backend Integration'],
+    liveUrl: 'https://shopperific.netlify.app/',
+    githubUrl: 'https://github.com/otegamike/shopperific',
+    color: 'linear-gradient(135deg, hsl(120, 19%, 55%), hsl(120, 50%, 45%))',
+}
 
 const Admin: React.FC = () => {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
+  const [isSubmiting, setIsSubmiting] = useState<boolean>(false);
+  const [isLoggingIn, setIsLoggingIn] = useState<boolean>(false);
+
+  const [stats, setStats] = useState(emptyStats);
+  
 
   // Form State
-  const [formData, setFormData] = useState({
-    title: 'Shopperific',
-    previews: 'https://res.cloudinary.com/dgaprn7ur/image/upload/v1773704290/shopperific-1_x65idc.png\nhttps://res.cloudinary.com/dgaprn7ur/image/upload/v1773704289/shopperific-7_y0g1ne.png\nhttps://res.cloudinary.com/dgaprn7ur/image/upload/v1773704289/shopperific-6_ubexsn.png\nhttps://res.cloudinary.com/dgaprn7ur/image/upload/v1773704289/shopperific-5_frfuzv.png\nhttps://res.cloudinary.com/dgaprn7ur/image/upload/v1773704289/shopperific-4_be8cpr.png\nhttps://res.cloudinary.com/dgaprn7ur/image/upload/v1773704289/shopperific-03_zbd208.png\nhttps://res.cloudinary.com/dgaprn7ur/image/upload/v1773704289/shopperific-2_iceyay.png',
-    description: 'A full-featured ecommerce platform with product browsing, search, cart management, and order processing. Built with a modern React frontend and a Node.js/Express backend integrated with MongoDB.',
-    techStack: 'React, TypeScript, Node.js, Express, MongoDB',
-    features: 'Product Search, Shopping Cart, Order Management, Dashboard Analytics, Backend Integration',
-    liveUrl: 'https://shopperific.netlify.app/',
-    githubUrl: 'https://github.com/otegamike/shopperific',
-    color: 'linear-gradient(135deg, hsl(120, 19%, 55%), hsl(120, 50%, 45%))',
-  });
+  const [formData, setFormData] = useState<IProject>(emptyFormData);
+    
   const [formSuccess, setFormSuccess] = useState(false);
 
   const handleLogout = () => {
@@ -27,13 +62,32 @@ const Admin: React.FC = () => {
     navigate('/');
   };
 
-  const handleLogin = (e: React.FormEvent) => {
+  const loadStats = async () => {
+    try {
+      const stats = await getStats();
+      setStats(stats);
+    } catch (error) {
+      console.error('Error loading stats:', error);
+    }
+  }
+
+  const resetForm = () => {
+    setFormData(emptyFormData);
+  }
+
+  const handleAdminLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === 'neo' || password === 'matrix') {
-      setIsAuthenticated(true);
-      setErrorMsg('');
-    } else {
+    setIsLoggingIn(true);
+    
+    try {
+      const success = await adminLogin({ password });
+      if (success) {
+        setIsAuthenticated(true);
+      }
+    } catch (error) {
       setErrorMsg('Access Denied. Invalid credentials.');
+    } finally {
+      setIsLoggingIn(false);
     }
   };
 
@@ -41,24 +95,33 @@ const Admin: React.FC = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleProjectSubmit = (e: React.FormEvent) => {
+  const handlePillsChange = (name: string, value: string[]) => {
+    setFormData({ ...formData, [name]: value });
+  }
+
+
+
+  const handleProjectSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulate API call
-    setTimeout(() => {
+    setIsSubmiting(true);
+    try {
+      await addNewProject(formData);
       setFormSuccess(true);
-      setTimeout(() => setFormSuccess(false), 3000);
-      setFormData({
-        title: '',
-        previews: '',
-        description: '',
-        techStack: '',
-        features: '',
-        liveUrl: '',
-        githubUrl: '',
-        color: '',
-      });
-    }, 500);
+      resetForm();
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsSubmiting(false);
+    }
   };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      loadStats();
+    }
+  }, [isAuthenticated]);
+
+  
 
   if (!isAuthenticated) {
     return (
@@ -70,7 +133,7 @@ const Admin: React.FC = () => {
           transition={{ duration: 0.3 }}
         >
           <h2 className="admin-login-title">SYSTEM_LOGIN</h2>
-          <form onSubmit={handleLogin} className="admin-login-form">
+          <form onSubmit={(e: React.FormEvent) => handleAdminLogin(e)} className="admin-login-form">
             <div className="input-group">
               <label htmlFor="password">Enter Passkey:</label>
               <input
@@ -84,7 +147,7 @@ const Admin: React.FC = () => {
               />
             </div>
             {errorMsg && <div className="error-message">{errorMsg}</div>}
-            <button type="submit" className="admin-btn">AUTHENTICATE</button>
+            <button type="submit" className="admin-btn"> {isLoggingIn ? 'AUTHENTICATING...' : 'AUTHENTICATE'}</button>
           </form>
         </motion.div>
       </div>
@@ -105,31 +168,31 @@ const Admin: React.FC = () => {
         {/* Stats Section */}
         <section className="admin-section">
 
-          <span className="section-label">Analytics</span>
+          <SectionLabel>Analytics</SectionLabel>
           <h2 className="section-title">Traffic_Stats</h2>
           <div className="stats-grid">
             <div className="stat-card">
-              <div className="stat-value">1,337</div>
-              <div className="stat-label">Homepage Views</div>
+              <div className="stat-value">{stats.siteViews.toLocaleString()}</div>
+              <div className="stat-label">Total Site Views</div>
             </div>
             <div className="stat-card">
-              <div className="stat-value">42</div>
-              <div className="stat-label">Unique Visitors (Today)</div>
+              <div className="stat-value">{stats.projectsCompleted}</div>
+              <div className="stat-label">Projects Completed</div>
             </div>
             <div className="stat-card">
-              <div className="stat-value">3.14s</div>
-              <div className="stat-label">Avg. Session Duration</div>
+              <div className="stat-value">{stats.messagesReceived}</div>
+              <div className="stat-label">Messages Received</div>
             </div>
             <div className="stat-card">
-              <div className="stat-value">99.9%</div>
-              <div className="stat-label">System Uptime</div>
+              <div className="stat-value">{stats.yearsOfExperience}+</div>
+              <div className="stat-label">Years of Experience</div>
             </div>
           </div>
         </section>
 
         {/* Add Project Form */}
         <section className="admin-section">
-          <span className="section-label">Database</span>
+          <SectionLabel>Database</SectionLabel>
           <h2 className="section-title">Add_Project</h2>
           
           <form className="project-form" onSubmit={handleProjectSubmit}>
@@ -159,25 +222,35 @@ const Admin: React.FC = () => {
                 <textarea id="description" name="description" value={formData.description} onChange={handleChange} rows={4} required />
               </div>
 
-              <div className="input-group">
-                <label htmlFor="techStack">Tech Stack (comma separated)</label>
-                <textarea id="techStack" name="techStack" value={formData.techStack} onChange={handleChange} rows={3} required />
-              </div>
+              <FormPills
+                label="Tech Stack"
+                id="techStack"
+                name="techStack"
+                formValue={formData.techStack}
+                handlePillsChange={handlePillsChange}
+              />
 
-              <div className="input-group">
-                <label htmlFor="features">Features (comma separated)</label>
-                <textarea id="features" name="features" value={formData.features} onChange={handleChange} rows={3} required />
-              </div>
+              <FormPills
+                label="Features"
+                id="features"
+                name="features"
+                formValue={formData.features}
+                handlePillsChange={handlePillsChange}
+              />
 
-              <div className="input-group full-width">
-                <label htmlFor="previews">Preview Image URLs (one per line)</label>
-                <textarea id="previews" name="previews" value={formData.previews} onChange={handleChange} rows={5} required />
-              </div>
+              <FormPills
+                label="Preview Images urls"
+                id="previews"
+                name="previews"
+                formValue={formData.previews}
+                handlePillsChange={handlePillsChange}
+                type="image-preview"
+              />
             </div>
 
             <div className="form-actions">
               <button type="submit" className="admin-btn">
-                {formSuccess ? 'PROJECT_SAVED' : 'SUBMIT_PROJECT'}
+                {isSubmiting ? 'SUBMITTING...' : formSuccess ? 'PROJECT_SAVED' : 'SUBMIT_PROJECT'}
               </button>
               {formSuccess && <span className="success-msg">Data successfully injected.</span>}
             </div>
@@ -190,3 +263,99 @@ const Admin: React.FC = () => {
 };
 
 export default Admin;
+
+type PillType = "pills" | "image-preview";
+
+export interface FormPillsProps {
+  label: string;
+  id: string;
+  name: string;
+  formValue: string[];
+  type?: PillType;
+  handlePillsChange: (name: string, value: string[]) => void;
+}
+
+const FormPills = ({ label, id, name, formValue, type, handlePillsChange }: FormPillsProps) => {
+  const [inputValue, setInputValue] = useState('');
+  
+  const handleRemovePill = (index: number) => {
+    const newValues = [...formValue];
+    newValues.splice(index, 1);
+    handlePillsChange(name, newValues);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+
+    if (value.includes(",") && value.at(-1) !==",") {
+      const values = value.split(",");
+      handlePillsChange(name, [...formValue, ...values]);
+      setInputValue("");
+    } else if (value.at(-1) ===",") {
+      if (value.slice(0, -1).trim() === "") return;
+      handlePillsChange(name, [...formValue, value.slice(0, -1)]);
+      setInputValue("");
+    } else {
+      setInputValue(value);
+    }
+  };
+
+  const pillType: Record<PillType, React.ReactNode> = {
+    "pills": <Pills formValue={formValue} handleRemovePill={handleRemovePill} />,
+    "image-preview": <ImagePreview formValue={formValue} handleRemovePill={handleRemovePill} />
+  }
+
+
+
+  return (
+    <div className="input-group">
+      <label htmlFor={id}>{label} (comma separated)</label>
+
+      <div className="pills-input-wrapper">
+        {(formValue.length > 0) &&
+          pillType[type || "pills"]
+        }
+
+        <input id={id} name={name} value={inputValue} onChange={(e) => handleChange(e)} />
+      </div>
+    </div>
+  )
+}
+
+interface PillsProps {
+  formValue: string[];
+  handleRemovePill: (index: number) => void;
+}
+
+const Pills = ({formValue, handleRemovePill}: PillsProps) => {
+  return (
+    <div className="pills-container">
+          {formValue.map((pill, index) => (
+            <div key={index} className="pill">
+              <span>{pill}</span>
+              <button className="pill-remove-btn" type="button" onClick={() => handleRemovePill(index)}>
+                &times;
+              </button>
+            </div>
+          ))}
+    </div>
+    
+  )
+}
+
+const ImagePreview = ({formValue, handleRemovePill}: PillsProps) => {
+  return (
+    <div className="image-preview-container">
+      {formValue.map((imageUrl, index) => (
+            <div key={imageUrl} className="image-pill">
+              <img className="preview-image" src={imageUrl} alt={`preview-${index}`} />
+              <button className="image-remove-btn" type="button" onClick={() => handleRemovePill(index)}>
+                &times;
+              </button>
+            </div>
+          ))}
+    </div>
+  )
+}
+
+

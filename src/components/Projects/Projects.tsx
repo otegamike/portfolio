@@ -1,13 +1,14 @@
 import { motion } from 'framer-motion';
-import ProjectCard, { type ProjectCardProps } from '../ProjectCard/ProjectCard';
+import ProjectCard from '../ProjectCard/ProjectCard';
+import type { IProject as ProjectCardProps } from '../../types/projectInterface';
+import SectionLabel from '../SectionLabel/SectionLabel';
 import './Projects.css';
 
-const projects: ProjectCardProps[] = [
+const allProjects: ProjectCardProps[] = [
   {
     title: 'Shopperific',
     previews: [
       'https://res.cloudinary.com/dgaprn7ur/image/upload/v1773704290/shopperific-1_x65idc.png',
-      'https://res.cloudinary.com/dgaprn7ur/image/upload/v1773704289/shopperific-7_y0g1ne.png',
       'https://res.cloudinary.com/dgaprn7ur/image/upload/v1773704289/shopperific-6_ubexsn.png',
       'https://res.cloudinary.com/dgaprn7ur/image/upload/v1773704289/shopperific-5_frfuzv.png',
       'https://res.cloudinary.com/dgaprn7ur/image/upload/v1773704289/shopperific-4_be8cpr.png',
@@ -124,7 +125,7 @@ const fadeUp = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
 };
 
-const Projects: React.FC = () => {
+const Projects = ({projects = allProjects}: {projects?: ProjectCardProps[]}) => {
   return (
     <section id="projects" className="projects">
       <div className="section-container">
@@ -134,9 +135,9 @@ const Projects: React.FC = () => {
           viewport={{ once: true, margin: '-80px' }}
           variants={containerVariants}
         >
-          <motion.span className="section-label" variants={fadeUp}>
+          <SectionLabel variants={fadeUp}>
             Projects
-          </motion.span>
+          </SectionLabel>
           <motion.h2 className="section-title" variants={fadeUp}>
             Featured work
           </motion.h2>

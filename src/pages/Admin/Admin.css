@@ -105,6 +105,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-xs);
+  max-width: 100%;
 }
 
 .input-group label {
@@ -115,18 +116,20 @@
 }
 
 .input-group input, 
-.input-group textarea {
+.input-group textarea, .pills-input-wrapper {
   background: var(--bg-tertiary);
   border: 1px solid var(--border-color);
+  letter-spacing: var(--ls-md);
   color: var(--text-primary);
   padding: var(--space-md);
   border-radius: var(--radius-sm);
   font-family: var(--font-body);
   transition: var(--transition-fast);
+  max-width: 100%;
 }
 
 .input-group input:focus,
-.input-group textarea:focus {
+.input-group textarea:focus, .pills-input-wrapper input:hover {
   border-color: var(--accent);
   box-shadow: 0 0 10px rgba(0, 255, 65, 0.1);
 }
@@ -254,5 +257,77 @@
 @media (max-width: 768px) {
   .form-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+
+.pills-container, .image-preview-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  padding: var(--space-sm);
+}
+
+.pill {
+  display: flex;
+  gap: var(--space-xs);
+  font-size: var(--fs-xs);
+  color: var(--text-secondary);
+  letter-spacing: var(--ls-md);
+  border: 1px solid var(--border-color);
+  padding: 0.25rem 0.6rem;
+  border-radius: var(--radius-full);
+
+  .pill-remove-btn {
+    background: transparent;
+    border: none;
+    color: rgb(250, 199, 199);
+    cursor: pointer;
+    font-size: var(--fs-sm);
+    padding: 0;
+    margin: 0;
+  }
+}
+
+.pills-input-wrapper {
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+
+.pills-input-wrapper input {
+  width: 100%;
+  border: none;
+}
+
+.image-pill {
+  border: 1px solid var(--border-color);
+  width: 30%;
+  aspect-ratio: 1;
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+
+  .preview-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .image-remove-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: red;
+    border: none;
+    color: rgb(250, 199, 199);
+    cursor: pointer;
+    font-size: var(--fs-xl);
+    padding: var(--space-xs);
+    margin: 0;
+    border-radius:0 0 0 var(--radius-sm);
+    box-shadow: -5px -5px 20px rgba(0, 255, 65, 0.1);
+
   }
 }
