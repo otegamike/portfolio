@@ -8,11 +8,13 @@
         type: String,
         trim: true,
         required: true,
+        index: true,
     },
     email: {
         type: String,
         trim: true,
         required: true,
+        
     },
     message: {
         type: String,

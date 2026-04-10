@@ -1,33 +1,19 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, type Variants } from 'framer-motion';
 import SectionLabel from '../SectionLabel/SectionLabel';
+import ContactForm from './ConactForm';
 import './Contact.css';
 
-const containerVariants = {
+const containerVariants: Variants = {
   hidden: {},
   visible: { transition: { staggerChildren: 0.1 } },
 };
 
-const fadeUp = {
+const fadeUp: Variants = {
   hidden: { opacity: 0, y: 30 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.55 } },
 };
 
 const Contact: React.FC = () => {
-  const [form, setForm] = useState({ name: '', email: '', message: '' });
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // For demo purposes — would integrate with a backend or email service
-    alert(`Thanks for reaching out, ${form.name}! I'll get back to you soon.`);
-    setForm({ name: '', email: '', message: '' });
-  };
 
   return (
     <section id="contact" className="contact">
@@ -50,69 +36,7 @@ const Contact: React.FC = () => {
           </motion.p>
 
           <div className="contact__grid">
-            <motion.form
-              className="contact__form"
-              onSubmit={handleSubmit}
-              variants={containerVariants}
-            >
-              <motion.div className="contact__field" variants={fadeUp}>
-                <label htmlFor="contact-name" className="contact__label">
-                  Name
-                </label>
-                <input
-                  id="contact-name"
-                  type="text"
-                  name="name"
-                  className="contact__input"
-                  placeholder="Your name"
-                  value={form.name}
-                  onChange={handleChange}
-                  required
-                />
-              </motion.div>
-
-              <motion.div className="contact__field" variants={fadeUp}>
-                <label htmlFor="contact-email" className="contact__label">
-                  Email
-                </label>
-                <input
-                  id="contact-email"
-                  type="email"
-                  name="email"
-                  className="contact__input"
-                  placeholder="you@example.com"
-                  value={form.email}
-                  onChange={handleChange}
-                  required
-                />
-              </motion.div>
-
-              <motion.div className="contact__field" variants={fadeUp}>
-                <label htmlFor="contact-message" className="contact__label">
-                  Message
-                </label>
-                <textarea
-                  id="contact-message"
-                  name="message"
-                  className="contact__textarea"
-                  placeholder="Tell me about your project..."
-                  rows={5}
-                  value={form.message}
-                  onChange={handleChange}
-                  required
-                />
-              </motion.div>
-
-              <motion.button
-                type="submit"
-                className="contact__submit"
-                variants={fadeUp}
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.97 }}
-              >
-                Send Message
-              </motion.button>
-            </motion.form>
+            <ContactForm />
 
             <motion.div className="contact__info" variants={containerVariants}>
               <motion.div className="contact__info-card" variants={fadeUp}>

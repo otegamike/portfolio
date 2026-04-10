@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState } from "react";
 
 // types
 import type { IProject } from "../types/projectInterface";
@@ -23,39 +23,35 @@ export const ProjectsContextProvider = ({ children }: { children: React.ReactNod
     const [loading, setLoading] = useState(true);
 
     const silentReload = async () => {
-        try {
-          const projects = await getProjects();
-          console.log(projects);
-          setProjects(projects);
-        } catch (error) {
-          console.error(error);
-        }
+      try {
+        const projects = await getProjects();
+        console.log(projects);
+        setProjects(projects);
+      } catch (error) {
+        console.error(error);
       }
+    }
     
-      const loadProjects = async () => {
-        setLoading(true);
-        await silentReload();
-        setLoading(false);
-      }
+    const loadProjects = async () => {
+      setLoading(true);
+      await silentReload();
+      setLoading(false);
+    }
 
-      const addNewProjectService = async (project: IProject) => {
-        const response = await addNewProject(project);
-        return response;
-      }
+    const addNewProjectService = async (project: IProject) => {
+      const response = await addNewProject(project);
+      return response;
+    }
 
-      const updateProjectService = async (id: string, project: IProject) => {
-        const response = await updateProject(id, project);
-        return response;
-      }
+    const updateProjectService = async (id: string, project: IProject) => {
+      const response = await updateProject(id, project);
+      return response;
+    }
 
-      const deleteProjectService = async (id: string) => {
-          await deleteProject(id);
-          setProjects((prevProjects) => prevProjects.filter((p) => p._id !== id));
-      }
-
-    useEffect(() => {
-        loadProjects();
-    }, []);
+    const deleteProjectService = async (id: string) => {
+        await deleteProject(id);
+        setProjects((prevProjects) => prevProjects.filter((p) => p._id !== id));
+    }
 
     return (
         <ProjectsContext.Provider 

@@ -6,6 +6,7 @@ import ProjectForm from './components/ProjectForm';
 import AdminLogin from './components/AdminLogin';
 import Analytics from './components/Analytics';
 import MyProjects from './components/MyProjects';
+import Messages from './components/messages/Messages';
 
 // project context
 import { ProjectsContextProvider } from '../../context/ProjectsContext';
@@ -24,7 +25,7 @@ const emptyStats = {
 
 const Admin: React.FC = () => {
   const navigate = useNavigate();
-  
+
   // Auth & Stats State
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [stats, setStats] = useState(emptyStats);
@@ -72,19 +73,20 @@ const Admin: React.FC = () => {
 
         {/* Database / Add Project Section */}
         <section className="admin-section">
+          <Messages />
           <ProjectsContextProvider>
             <SectionLabel>my projects</SectionLabel>
             <div className="admin-section-header">
               <h2 className="section-title">Add_Project</h2>
-            </div> 
-            
+            </div>
+
             <div className="project-form">
               <ProjectForm />
             </div>
-            
-            <MyProjects/>
+
+            <MyProjects />
           </ProjectsContextProvider>
-          
+
         </section>
       </main>
     </div>

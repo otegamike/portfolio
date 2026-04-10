@@ -125,3 +125,18 @@
     grid-template-columns: 1fr;
   }
 }
+
+.contact__info-card--success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+
+  p {
+    text-align: center;
+    font-size: var(--fs-sm);
+    font-weight: bold;
+    color: var(--text-primary);
+  }
+}

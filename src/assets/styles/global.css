@@ -59,6 +59,8 @@ input, textarea {
   --bg-tertiary: #0d1a0d;
   --bg-card: hsl(120, 20%, 6%);
   --bg-card-hover: #0f1f0f;
+  --bg-transparent: hsl(120 20% 15% / 0.35);
+  --bg-blur: blur(16px);
 
   --text-primary: #e6ffe6;
   --text-secondary: #7dba7d;

@@ -5,6 +5,7 @@ import { globalErrorHandler } from './middleware/errorHandler.js';
 import projectRoutes from './routes/projectRoutes.js';
 import statRoutes from './routes/statRoutes.js';
 import adminRoutes from './routes/authenticateAdmin.js';
+import messageRoutes from './routes/messagesRoute.js';
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.use(connectToDb);
 app.use('/api/projects', projectRoutes);
 app.use('/api/stats', statRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/messages', messageRoutes);
 
 app.get("/api/hello", (req, res) => {
     res.send("Hello World!");
