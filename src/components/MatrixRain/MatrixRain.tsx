@@ -3,12 +3,16 @@ import React, { useEffect, useRef } from 'react';
 const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%^&*()_+-=[]{}|;:<>?/~';
 const FONT_SIZE = 13;
 
-const getColumnGap = (width: number) => (width < 768 ? 24 : 20);
+const isMobile = /iPhone|iPad|Android/i.test(navigator.userAgent);
+const getColumnGap = (width: number) => (width < 768 ? 36 : 20); // wider gap on mobile = fewer columns
 
 const MatrixRain: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
+    // Respect accessibility preference — also saves battery
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d', { alpha: false });
@@ -18,17 +22,16 @@ const MatrixRain: React.FC = () => {
     let columns: number[] = [];
     let columnSpeeds: number[] = [];
     let lastTime = 0;
-    const interval = 1000 / 30; // 30 fps target
+    const interval = 1000 / (isMobile ? 18 : 30); // lower fps on mobile
 
     let cachedWidth = 0;
     let cachedHeight = 0;
     let columnGap = 20;
 
-    // --- Back-Buffer Setup ---
-    const offCanvas = document.createElement('canvas');
-    const offCtx = offCanvas.getContext('2d', { alpha: false });
-    
-    // --- Atlas (Offscreen Canvas) Setup ---
+    // Back-buffer only on desktop — skipping the blit is a big mobile win
+    const offCanvas = isMobile ? null : document.createElement('canvas');
+    const offCtx = offCanvas ? offCanvas.getContext('2d', { alpha: false }) : null;
+
     let atlasCanvas: HTMLCanvasElement | null = null;
     let atlasCellWidth = 0;
     let atlasCellHeight = 0;
@@ -43,19 +46,16 @@ const MatrixRain: React.FC = () => {
       const cellW = scaledFontSize;
       const cellH = scaledFontSize;
       ac.width = CHARS.length * cellW;
-      ac.height = cellH * 2; // Two rows: 0 (Green), 1 (White)
+      ac.height = cellH * 2;
 
       actx.font = `${scaledFontSize}px 'Share Tech Mono', monospace`;
       actx.textBaseline = 'top';
       actx.textAlign = 'center';
 
-      // Draw Green Characters
       actx.fillStyle = '#00FF41';
       for (let i = 0; i < CHARS.length; i++) {
         actx.fillText(CHARS[i], i * cellW + cellW / 2, 0);
       }
-
-      // Draw White Characters
       actx.fillStyle = '#ffffff';
       for (let i = 0; i < CHARS.length; i++) {
         actx.fillText(CHARS[i], i * cellW + cellW / 2, cellH);
@@ -67,35 +67,33 @@ const MatrixRain: React.FC = () => {
     };
 
     const resize = () => {
-      currentDpr = Math.min(window.devicePixelRatio || 1, 2);
+      // Cap DPR at 1 on mobile — this alone halves/thirds the pixel work on iPhones
+      currentDpr = Math.min(window.devicePixelRatio || 1, isMobile ? 1 : 2);
       cachedWidth = window.innerWidth;
       cachedHeight = window.innerHeight;
       columnGap = getColumnGap(cachedWidth);
 
-      // Main visible canvas
       canvas.width = cachedWidth * currentDpr;
       canvas.height = cachedHeight * currentDpr;
       canvas.style.width = `${cachedWidth}px`;
       canvas.style.height = `${cachedHeight}px`;
 
-      // Back-buffer canvas
-      offCanvas.width = cachedWidth * currentDpr;
-      offCanvas.height = cachedHeight * currentDpr;
-      
-      if (offCtx) {
-        // Reset transform before re-scaling, in case resize is called multiple times
-        offCtx.resetTransform();
-        offCtx.scale(currentDpr, currentDpr);
-        offCtx.fillStyle = '#050505';
-        offCtx.fillRect(0, 0, cachedWidth, cachedHeight);
+      if (offCanvas) {
+        offCanvas.width = cachedWidth * currentDpr;
+        offCanvas.height = cachedHeight * currentDpr;
       }
+
+      const target = offCtx ?? ctx;
+      target.resetTransform?.();
+      target.scale(currentDpr, currentDpr);
+      target.fillStyle = '#050505';
+      target.fillRect(0, 0, cachedWidth, cachedHeight);
 
       createAtlas(currentDpr);
 
       const colCount = Math.floor(cachedWidth / columnGap);
       const newColumns: number[] = [];
       const newSpeeds: number[] = [];
-      
       for (let i = 0; i < colCount; i++) {
         newColumns[i] = columns[i] ?? Math.random() * -100;
         newSpeeds[i] = columnSpeeds[i] ?? 0.5 + Math.random() * 1.5;
@@ -105,8 +103,7 @@ const MatrixRain: React.FC = () => {
     };
 
     window.addEventListener('resize', resize);
-    
-    if (document.fonts && document.fonts.ready) {
+    if (document.fonts?.ready) {
       document.fonts.ready.then(resize);
     } else {
       resize();
@@ -114,30 +111,33 @@ const MatrixRain: React.FC = () => {
 
     const draw = (timestamp: number) => {
       animFrameId = requestAnimationFrame(draw);
-
       if (timestamp - lastTime < interval) return;
       lastTime = timestamp;
+      if (!atlasCanvas) return;
 
-      if (!offCtx || !atlasCanvas) return;
+      // Draw to offCtx (desktop) or directly to ctx (mobile)
+      const target = offCtx ?? ctx;
 
-      // Darken the back-buffer
-      offCtx.fillStyle = 'rgba(5, 5, 5, 0.15)';
-      offCtx.fillRect(0, 0, cachedWidth, cachedHeight);
+      // Use destination-out fade instead of rgba fillRect —
+      // avoids a full-screen alpha-blend compositing pass on the GPU
+      target.globalCompositeOperation = 'destination-out';
+      target.fillStyle = 'rgba(0, 0, 0, 0.12)';
+      target.fillRect(0, 0, cachedWidth, cachedHeight);
+      target.globalCompositeOperation = 'source-over';
 
-      // Draw the characters to the back-buffer
       for (let i = 0; i < columns.length; i++) {
         const charIndex = Math.floor(Math.random() * CHARS.length);
         const x = i * columnGap;
         const y = columns[i] * FONT_SIZE;
         const isWhite = Math.random() > 0.98;
 
-        const sx = charIndex * atlasCellWidth;
-        const sy = isWhite ? atlasCellHeight : 0;
-
-        offCtx.drawImage(
+        target.drawImage(
           atlasCanvas,
-          sx, sy, atlasCellWidth, atlasCellHeight, // Source physical pixels
-          x, y, FONT_SIZE, FONT_SIZE // Destination logical coords
+          charIndex * atlasCellWidth,
+          isWhite ? atlasCellHeight : 0,
+          atlasCellWidth,
+          atlasCellHeight,
+          x, y, FONT_SIZE, FONT_SIZE
         );
 
         if (y > cachedHeight && Math.random() > 0.98) {
@@ -146,22 +146,18 @@ const MatrixRain: React.FC = () => {
         columns[i] += columnSpeeds[i];
       }
 
-      // Blit everything from back-buffer to visible canvas
-      ctx.drawImage(offCanvas, 0, 0);
+      // Desktop only: blit back-buffer to visible canvas
+      if (offCanvas) {
+        ctx.drawImage(offCanvas, 0, 0);
+      }
     };
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          if (!animFrameId) {
-            lastTime = 0;
-            animFrameId = requestAnimationFrame(draw);
-          }
+          if (!animFrameId) { lastTime = 0; animFrameId = requestAnimationFrame(draw); }
         } else {
-          if (animFrameId) {
-            cancelAnimationFrame(animFrameId);
-            animFrameId = 0;
-          }
+          if (animFrameId) { cancelAnimationFrame(animFrameId); animFrameId = 0; }
         }
       },
       { threshold: 0 }
@@ -197,12 +193,12 @@ const MatrixRain: React.FC = () => {
       style={{
         display: 'block',
         position: 'absolute',
-        top: 0,
-        left: 0,
+        top: 0, left: 0,
         width: '100%',
         height: '100%',
         zIndex: 0,
-        background: '#050505', // Ensures a fallback
+        background: '#050505',
+        willChange: 'transform', // promotes canvas to its own GPU layer
       }}
     />
   );
