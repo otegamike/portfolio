@@ -29,10 +29,11 @@ const emptyFormData: ProjectFormValues = {
 interface ProjectFormProps {
   project?: ProjectFormValues;
   editMode?: boolean;
+  exitEditMode?: () => void;
   id?: string;
 }
 
-function ProjectForm({project = emptyFormData, editMode = false, id}: ProjectFormProps) {
+function ProjectForm({project = emptyFormData, editMode = false, id, exitEditMode}: ProjectFormProps) {
 
   const { silentReload } = useProjectContext();
 
@@ -84,6 +85,7 @@ function ProjectForm({project = emptyFormData, editMode = false, id}: ProjectFor
               throw new Error("Project ID is required for update");
             }
             await updateProject(id, data);
+            exitEditMode?.();
           } else {
             await addNewProject(data);
           }

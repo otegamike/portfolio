@@ -371,3 +371,7 @@
 .loading {
   padding: var(--space-xl);
 }
+
+.bulk-textarea {
+  margin-bottom: var(--space-lg);
+}

@@ -3,6 +3,9 @@ import type { IProject } from '../../types/projectInterface';
 import ProjectCard from '../ProjectCard/ProjectCard';
 import ProjectForm from '../../pages/Admin/components/ProjectForm';
 
+// hooks
+import { useProjectContext } from '../../hooks/useProjectContext';
+
 import { motion } from 'framer-motion';
 
 interface ProjectCardContainerProps {
@@ -12,13 +15,31 @@ interface ProjectCardContainerProps {
 
 function ProjectCardContainer({Admin, project}: ProjectCardContainerProps) {
   const [isEditing, setIsEditing] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
-  const EnterEditMode = () => {
+  const { deleteProjectService, silentReload } = useProjectContext();
+
+  const enterEditMode = () => {
     setIsEditing(true);
   }
 
-  const ExitEditMode = () => {
+  const exitEditMode = () => {
     setIsEditing(false);
+  }
+
+  const handleDelete = async () => {
+    try {
+      setIsDeleting(true);
+      if (!project._id) {
+        throw new Error('Project ID is required');
+      }
+      await deleteProjectService(project._id);
+      silentReload();
+    } catch (error) {
+      console.error('Error deleting project:', error);
+    } finally {
+      setIsDeleting(false);
+    }
   }
 
   return (
@@ -36,17 +57,17 @@ function ProjectCardContainer({Admin, project}: ProjectCardContainerProps) {
         {Admin && (
             <div className="project-card__admin">
             {isEditing ? (
-              <button onClick={ExitEditMode}>Cancel</button>
+              <button onClick={exitEditMode}>Cancel</button>
             ) : (
-              <button onClick={EnterEditMode}>Edit</button>
+              <button onClick={enterEditMode}>Edit</button>
             )}
-            <button onClick={() => console.log('Delete project')}>Delete</button>
+            <button onClick={handleDelete} disabled={isDeleting}>{isDeleting ? 'Deleting...' : 'Delete'}</button>
             </div>
         )}
 
         {isEditing ? (
           <div className="project-card__edit">
-            <ProjectForm project={project} editMode={true} id={project._id} />
+            <ProjectForm project={project} editMode={true} exitEditMode={exitEditMode} id={project._id} />
           </div>
         ) : (
             <ProjectCard project={project} />

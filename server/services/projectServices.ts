@@ -28,10 +28,20 @@ export const getProjects = async (): Promise<IProjectDocument[]> => {
 
 export const editProject = async (id: string, project: IProject) => {
     try {
-        const updatedProject = await Project.findByIdAndUpdate(id, project, { new: true });
+        const updatedProject = await Project.findByIdAndUpdate(id, project, { returnDocument: 'after' });
         return updatedProject;
     } catch (error) {
         console.log(error);
         throw new AppError("Error editing project", 500);
+    }
+}
+
+export const deleteProject = async (id: string) => {
+    try {
+        const deletedProject = await Project.findByIdAndDelete(id);
+        return deletedProject;
+    } catch (error) {
+        console.log(error);
+        throw new AppError("Error deleting project", 500);
     }
 }

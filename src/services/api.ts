@@ -19,7 +19,6 @@ api.interceptors.request.use((config) => {
 
   if (memoryToken) {
     config.headers.authorization = `Bearer ${memoryToken}`;
-    console.log(memoryToken);
   }
   return config;
 });
@@ -28,7 +27,6 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => {
         const newToken = response.headers.authorization?.split(" ")[1];
-        console.log(newToken);
         if (newToken) {
           memoryToken = newToken;
         }
