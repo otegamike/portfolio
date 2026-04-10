@@ -12,6 +12,7 @@
     "packageJson": {
       "dependencies": [
         "npm:@eslint/js@^9.39.4",
+        "npm:@hookform/resolvers@^5.2.2",
         "npm:@types/cors@^2.8.19",
         "npm:@types/express@^5.0.6",
         "npm:@types/jsonwebtoken@^9.0.10",
@@ -33,12 +34,14 @@
         "npm:mongoose@^9.4.1",
         "npm:netlify-cli@^24.9.0",
         "npm:react-dom@^19.2.4",
+        "npm:react-hook-form@^7.72.1",
         "npm:react-router-dom@^7.13.1",
         "npm:react@^19.2.4",
         "npm:serverless-http@4",
         "npm:typescript-eslint@^8.56.1",
         "npm:typescript@~5.9.3",
-        "npm:vite@8"
+        "npm:vite@8",
+        "npm:zod@^4.3.6"
       ]
     }
   }

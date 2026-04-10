@@ -37,5 +37,18 @@ export const updateProject = async (id: string, project: IProject) => {
     }
 }
 
+export const deleteProject = async (id: string) => {
+    try {
+        const response = await api.delete(`/projects/delete/${id}`);
+        alertObj("Project deleted successfully", "success");
+        return response.data;
+    } catch (error) {
+        console.error('Error deleting project:', error);
+        alertObj("Error deleting project", "error");
+        throw error;
+    }
+}
+
+
 
 

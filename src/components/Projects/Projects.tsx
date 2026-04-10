@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import ProjectCard from '../ProjectCard/ProjectCard';
+import ProjectCardContainer from './ProjectCardContainer';
 import type { IProject as ProjectCardProps } from '../../types/projectInterface';
 import SectionLabel from '../SectionLabel/SectionLabel';
 import './Projects.css';
@@ -125,7 +125,12 @@ const fadeUp = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
 };
 
-const Projects = ({projects = allProjects}: {projects?: ProjectCardProps[]}) => {
+interface ProjectsProps {
+  projects?: ProjectCardProps[];
+  Admin?: boolean;
+}
+
+const Projects = ({projects = allProjects, Admin = false}: ProjectsProps) => {
   return (
     <section id="projects" className="projects">
       <div className="section-container">
@@ -141,14 +146,17 @@ const Projects = ({projects = allProjects}: {projects?: ProjectCardProps[]}) => 
           <motion.h2 className="section-title" variants={fadeUp}>
             Featured work
           </motion.h2>
-          <motion.p className="section-description" variants={fadeUp}>
-            A selection of projects that showcase my skills in frontend
-            development, component architecture, and full-stack integration.
-          </motion.p>
+          {!Admin && (
+            <motion.p className="section-description" variants={fadeUp}>
+              A selection of projects that showcase my skills in frontend
+              development, component architecture, and full-stack integration.
+            </motion.p>
+          )}
 
           <motion.div className="projects__grid" variants={containerVariants}>
-            {projects.map((p) => (
-              <ProjectCard key={p.title} {...p} />
+            {projects.map((project) => (
+              
+              <ProjectCardContainer key={project.title} project={project} Admin={Admin} />
             ))}
           </motion.div>
         </motion.div>

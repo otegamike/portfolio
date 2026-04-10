@@ -12,13 +12,15 @@ export interface IProject {
     color: string;
 }
 
-export const projectSchema = z.object({
-    title: z.string().min(1, "Title is required"),
-    previews: z.array(z.string().url("Invalid URL")).min(1, "At least one preview image is required"),
-    description: z.string().min(1, "Description is required"),
-    techStack: z.array(z.string()).min(1, "At least one tech stack is required"),
-    features: z.array(z.string()).min(1, "At least one feature is required"),
-    liveUrl: z.string().url("Invalid URL"),
-    githubUrl: z.string().url("Invalid URL"),
-    color: z.string().min(1, "Color is required"),
+export const ProjectSchema = z.object({
+  title: z.string().min(1, "Title is required"),
+  previews: z.array(z.string().url("Invalid image URL")).min(1, "At least one preview image is required"),
+  description: z.string().min(10, "Description must be at least 10 characters"),
+  techStack: z.array(z.string()).min(1, "At least one tech stack item is required"),
+  features: z.array(z.string()),
+  liveUrl: z.string().url("Invalid Live URL"),
+  githubUrl: z.string().url("Invalid GitHub URL"),
+  color: z.string().min(1, "Theme color is required"),
 });
+
+export type ProjectFormValues = z.infer<typeof ProjectSchema>;

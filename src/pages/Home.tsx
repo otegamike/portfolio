@@ -4,10 +4,11 @@ import Navbar from '../components/Navbar/Navbar';
 import Hero from '../components/Hero/Hero';
 import About from '../components/About/About';
 import Skills from '../components/Skills/Skills';
-import Projects from '../components/Projects/Projects';
 import Experience from '../components/Experience/Experience';
 import Contact from '../components/Contact/Contact';
 import Footer from '../components/Footer/Footer';
+import MyProjects from './Admin/components/MyProjects';
+import { ProjectsContextProvider } from '../context/ProjectsContext';
 import './Home.css';
 
 const Home: React.FC = () => {
@@ -25,7 +26,9 @@ const Home: React.FC = () => {
         <Hero />
         <About />
         <Skills />
-        <Projects />
+        <ProjectsContextProvider>
+          <MyProjects Admin={false} />
+        </ProjectsContextProvider>
         <Experience />
         <Contact />
       </main>

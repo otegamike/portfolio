@@ -14,3 +14,9 @@
     grid-template-columns: 1fr;
   }
 }
+
+.project-card__edit {
+  padding: var(--space-md);
+
+}
+  

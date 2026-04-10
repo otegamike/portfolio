@@ -1,5 +1,6 @@
 .project-card {
-  background: var(--bg-card);
+  position: relative;
+  background-color: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-xl);
   overflow: hidden;
@@ -190,4 +191,33 @@
 .project-card__link--secondary:hover {
   border-color: var(--accent);
   color: var(--text-primary);
+}
+
+.project-card__admin {
+  position: absolute;
+  top: var(--space-md);
+  left: var(--space-md);
+  background-color: hsl(120 20% 15% / 0.35);
+  backdrop-filter: blur(16px);
+  z-index: 1;
+  padding: var(--space-sm);
+  border-radius: var(--radius-md);
+  display: flex;
+  gap: var(--space-sm);
+
+  button {
+    padding: var(--space-xs);
+    font-size: var(--fs-xs);
+    border-radius: var(--radius-xs);
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+
+    &:hover {
+      background-color: var(--accent-glow);
+    }
+
+  }
+
+  
 }

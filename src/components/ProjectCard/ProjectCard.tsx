@@ -1,18 +1,16 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import type { IProject as ProjectCardProps } from '../../types/projectInterface';
+import type { IProject } from '../../types/projectInterface';
 import './ProjectCard.css';
 
-const ProjectCard: React.FC<ProjectCardProps> = ({
-  title,
-  description,
-  techStack,
-  features,
-  liveUrl,
-  githubUrl,
-  color = 'var(--accent)',
-  previews = [],
-}) => {
+interface ProjectCardProps {
+  project: IProject;
+}
+
+const ProjectCard = ({ project}: ProjectCardProps) => {
+
+  const {title, description, techStack, features, liveUrl, githubUrl, color, previews} = project;
+
   const [activeIndex, setActiveIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -45,15 +43,10 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
 
   return (
     <motion.article
-      className="project-card"
-      variants={{
-        hidden: { opacity: 0, y: 40 },
-        visible: { opacity: 1, y: 0, transition: { duration: 0.55 } },
-      }}
-      whileHover={{ y: -8 }}
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
     >
+      
       <div className="project-card__accent" style={{ background: color }} />
       {/* Preview carousel or accent bar */}
       {hasPreviews ? (

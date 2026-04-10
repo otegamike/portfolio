@@ -27,7 +27,7 @@ export async function connectDB() {
 
   if (!cached.promise) {
     cached.promise = db.connect(MONGODB_URI,  {
-      dbName: "OpenClipboard",
+      dbName: "Portfolio",
       bufferCommands: false,
     });
   }

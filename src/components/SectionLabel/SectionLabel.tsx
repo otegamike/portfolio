@@ -7,13 +7,15 @@ interface SectionLabelProps {
   className?: string;
   variants?: Variants;
   speed?: number; // Added speed control
+  infinite?: boolean;
 }
 
 const SectionLabel: React.FC<SectionLabelProps> = ({ 
   children, 
   className = "section-label", 
   variants,
-  speed = 100 
+  speed = 100 ,
+  infinite = false
 }) => {
   const ref = useRef<HTMLSpanElement>(null);
   // Added 'amount' to ensure it triggers when 10% is visible
@@ -29,6 +31,7 @@ const SectionLabel: React.FC<SectionLabelProps> = ({
         if (currentIndex <= textToType.length) {
           setDisplayedText(textToType.slice(0, currentIndex));
           currentIndex++;
+          if (infinite && currentIndex === textToType.length) currentIndex = 0;
           timeoutId = setTimeout(type, speed);
         }
       };
