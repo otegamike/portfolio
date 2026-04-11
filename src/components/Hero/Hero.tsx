@@ -1,4 +1,6 @@
 import { motion } from 'framer-motion';
+import { MoveDown } from 'lucide-react';
+
 import './Hero.css';
 
 const Hero: React.FC = () => {
@@ -99,7 +101,7 @@ const Hero: React.FC = () => {
         animate={{ opacity: 1 }}
         transition={{ delay: 1.2, duration: 0.6 }}
       >
-        
+        <MoveDown size={25} className="move-down" />
         <span className="hero__scroll-text">Scroll down</span>
       </motion.div>
     </section>

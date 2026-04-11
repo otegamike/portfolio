@@ -1,18 +1,79 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useState, useRef, useMemo } from 'react';
 
 const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%^&*()_+-=[]{}|;:<>?/~';
 const FONT_SIZE = 13;
 
-const isMobile = /iPhone|iPad|Android/i.test(navigator.userAgent);
-const getColumnGap = (width: number) => (width < 768 ? 36 : 20); // wider gap on mobile = fewer columns
+// --- CSS Version for Mobile (Performant) ---
+const MatrixRainMobile: React.FC = () => {
+  const columnCount = 15; // Fewer columns for mobile performance
+  
+  // Generate random character strings for each column once
+  const columns = useMemo(() => {
+    return Array.from({ length: columnCount }).map(() => {
+      const length = 20 + Math.floor(Math.random() * 20);
+      const chars = Array.from({ length })
+        .map(() => CHARS[Math.floor(Math.random() * CHARS.length)])
+        .join('\n');
+      return {
+        chars,
+        duration: 5 + Math.random() * 10, // Random fall speed
+        delay: Math.random() * -20, // Random start offset
+        left: `${Math.random() * 100}%`,
+      };
+    });
+  }, []);
 
-const MatrixRain: React.FC = () => {
+  return (
+    <div style={{
+      position: 'absolute',
+      inset: 0,
+      background: '#050505',
+      overflow: 'hidden',
+      userSelect: 'none',
+      pointerEvents: 'none',
+    }}>
+      <style>
+        {`
+          @keyframes matrixFall {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100vh); }
+          }
+          .matrix-column {
+            position: absolute;
+            top: 0;
+            color: #00FF41;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: ${FONT_SIZE}px;
+            line-height: ${FONT_SIZE}px;
+            white-space: pre;
+            text-shadow: 0 0 5px #00FF41;
+            will-change: transform;
+          }
+        `}
+      </style>
+      {columns.map((col, i) => (
+        <div
+          key={i}
+          className="matrix-column"
+          style={{
+            left: col.left,
+            animation: `matrixFall ${col.duration}s linear infinite`,
+            animationDelay: `${col.delay}s`,
+            opacity: 0.8,
+          }}
+        >
+          {col.chars}
+        </div>
+      ))}
+    </div>
+  );
+};
+
+// --- Your Original Canvas Version (Optimized) ---
+const MatrixRainCanvas: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    // Respect accessibility preference — also saves battery
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d', { alpha: false });
@@ -22,92 +83,47 @@ const MatrixRain: React.FC = () => {
     let columns: number[] = [];
     let columnSpeeds: number[] = [];
     let lastTime = 0;
-    const interval = 1000 / (isMobile ? 18 : 30); // lower fps on mobile
+    const interval = 1000 / 30;
 
     let cachedWidth = 0;
     let cachedHeight = 0;
-    let columnGap = 20;
-
-    // Back-buffer only on desktop — skipping the blit is a big mobile win
-    const offCanvas = isMobile ? null : document.createElement('canvas');
-    const offCtx = offCanvas ? offCanvas.getContext('2d', { alpha: false }) : null;
-
     let atlasCanvas: HTMLCanvasElement | null = null;
     let atlasCellWidth = 0;
     let atlasCellHeight = 0;
-    let currentDpr = 1;
 
     const createAtlas = (dpr: number) => {
       const scaledFontSize = FONT_SIZE * dpr;
       const ac = document.createElement('canvas');
-      const actx = ac.getContext('2d', { alpha: true });
+      const actx = ac.getContext('2d');
       if (!actx) return;
-
-      const cellW = scaledFontSize;
-      const cellH = scaledFontSize;
-      ac.width = CHARS.length * cellW;
-      ac.height = cellH * 2;
-
+      ac.width = CHARS.length * scaledFontSize;
+      ac.height = scaledFontSize * 2;
       actx.font = `${scaledFontSize}px 'Share Tech Mono', monospace`;
       actx.textBaseline = 'top';
       actx.textAlign = 'center';
-
       actx.fillStyle = '#00FF41';
-      for (let i = 0; i < CHARS.length; i++) {
-        actx.fillText(CHARS[i], i * cellW + cellW / 2, 0);
-      }
+      for (let i = 0; i < CHARS.length; i++) actx.fillText(CHARS[i], i * scaledFontSize + scaledFontSize / 2, 0);
       actx.fillStyle = '#ffffff';
-      for (let i = 0; i < CHARS.length; i++) {
-        actx.fillText(CHARS[i], i * cellW + cellW / 2, cellH);
-      }
-
+      for (let i = 0; i < CHARS.length; i++) actx.fillText(CHARS[i], i * scaledFontSize + scaledFontSize / 2, scaledFontSize);
       atlasCanvas = ac;
-      atlasCellWidth = cellW;
-      atlasCellHeight = cellH;
+      atlasCellWidth = scaledFontSize;
+      atlasCellHeight = scaledFontSize;
     };
 
     const resize = () => {
-      // Cap DPR at 1 on mobile — this alone halves/thirds the pixel work on iPhones
-      currentDpr = Math.min(window.devicePixelRatio || 1, isMobile ? 1 : 2);
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
       cachedWidth = window.innerWidth;
       cachedHeight = window.innerHeight;
-      columnGap = getColumnGap(cachedWidth);
-
-      canvas.width = cachedWidth * currentDpr;
-      canvas.height = cachedHeight * currentDpr;
+      canvas.width = cachedWidth * dpr;
+      canvas.height = cachedHeight * dpr;
       canvas.style.width = `${cachedWidth}px`;
       canvas.style.height = `${cachedHeight}px`;
-
-      if (offCanvas) {
-        offCanvas.width = cachedWidth * currentDpr;
-        offCanvas.height = cachedHeight * currentDpr;
-      }
-
-      const target = offCtx ?? ctx;
-      target.resetTransform?.();
-      target.scale(currentDpr, currentDpr);
-      target.fillStyle = '#050505';
-      target.fillRect(0, 0, cachedWidth, cachedHeight);
-
-      createAtlas(currentDpr);
-
-      const colCount = Math.floor(cachedWidth / columnGap);
-      const newColumns: number[] = [];
-      const newSpeeds: number[] = [];
-      for (let i = 0; i < colCount; i++) {
-        newColumns[i] = columns[i] ?? Math.random() * -100;
-        newSpeeds[i] = columnSpeeds[i] ?? 0.5 + Math.random() * 1.5;
-      }
-      columns = newColumns;
-      columnSpeeds = newSpeeds;
+      ctx.scale(dpr, dpr);
+      createAtlas(dpr);
+      const colCount = Math.floor(cachedWidth / 20);
+      columns = Array(colCount).fill(0).map(() => Math.random() * -100);
+      columnSpeeds = Array(colCount).fill(0).map(() => 0.5 + Math.random() * 1.5);
     };
-
-    window.addEventListener('resize', resize);
-    if (document.fonts?.ready) {
-      document.fonts.ready.then(resize);
-    } else {
-      resize();
-    }
 
     const draw = (timestamp: number) => {
       animFrameId = requestAnimationFrame(draw);
@@ -115,93 +131,52 @@ const MatrixRain: React.FC = () => {
       lastTime = timestamp;
       if (!atlasCanvas) return;
 
-      // Draw to offCtx (desktop) or directly to ctx (mobile)
-      const target = offCtx ?? ctx;
-
-      // Use destination-out fade instead of rgba fillRect —
-      // avoids a full-screen alpha-blend compositing pass on the GPU
-      target.globalCompositeOperation = 'destination-out';
-      target.fillStyle = 'rgba(0, 0, 0, 0.12)';
-      target.fillRect(0, 0, cachedWidth, cachedHeight);
-      target.globalCompositeOperation = 'source-over';
+      ctx.fillStyle = 'rgba(5, 5, 5, 0.15)';
+      ctx.fillRect(0, 0, cachedWidth, cachedHeight);
 
       for (let i = 0; i < columns.length; i++) {
         const charIndex = Math.floor(Math.random() * CHARS.length);
-        const x = i * columnGap;
+        const x = i * 20;
         const y = columns[i] * FONT_SIZE;
-        const isWhite = Math.random() > 0.98;
-
-        target.drawImage(
-          atlasCanvas,
-          charIndex * atlasCellWidth,
-          isWhite ? atlasCellHeight : 0,
-          atlasCellWidth,
-          atlasCellHeight,
-          x, y, FONT_SIZE, FONT_SIZE
-        );
-
-        if (y > cachedHeight && Math.random() > 0.98) {
-          columns[i] = 0;
-        }
+        ctx.drawImage(atlasCanvas, charIndex * atlasCellWidth, Math.random() > 0.98 ? atlasCellHeight : 0, atlasCellWidth, atlasCellHeight, x, y, FONT_SIZE, FONT_SIZE);
+        if (y > cachedHeight && Math.random() > 0.98) columns[i] = 0;
         columns[i] += columnSpeeds[i];
       }
-
-      // Desktop only: blit back-buffer to visible canvas
-      if (offCanvas) {
-        ctx.drawImage(offCanvas, 0, 0);
-      }
     };
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          if (!animFrameId) { lastTime = 0; animFrameId = requestAnimationFrame(draw); }
-        } else {
-          if (animFrameId) { cancelAnimationFrame(animFrameId); animFrameId = 0; }
-        }
-      },
-      { threshold: 0 }
-    );
-    observer.observe(canvas);
-
+    window.addEventListener('resize', resize);
+    resize();
     animFrameId = requestAnimationFrame(draw);
-
-    const handleVisibility = () => {
-      if (document.hidden) {
-        cancelAnimationFrame(animFrameId);
-        animFrameId = 0;
-      } else {
-        lastTime = 0;
-        animFrameId = requestAnimationFrame(draw);
-      }
-    };
-
-    document.addEventListener('visibilitychange', handleVisibility);
-
     return () => {
       cancelAnimationFrame(animFrameId);
       window.removeEventListener('resize', resize);
-      document.removeEventListener('visibilitychange', handleVisibility);
-      observer.disconnect();
     };
   }, []);
 
-  return (
-    <canvas
-      ref={canvasRef}
-      className="matrix-rain"
-      style={{
-        display: 'block',
-        position: 'absolute',
-        top: 0, left: 0,
-        width: '100%',
-        height: '100%',
-        zIndex: 0,
-        background: '#050505',
-        willChange: 'transform', // promotes canvas to its own GPU layer
-      }}
-    />
-  );
+  return <canvas ref={canvasRef} style={{ display: 'block', position: 'absolute', inset: 0, background: '#050505' }} />;
+};
+
+// --- Main Switcher Component ---
+const MatrixRain: React.FC = () => {
+  const [isMobile, setIsMobile] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    // Check for mobile by user agent or screen width
+    const checkMobile = () => {
+      const mobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      const mobileWidth = window.innerWidth < 768;
+      setIsMobile(mobileUA || mobileWidth);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Return null during hydration to avoid mismatch
+  if (isMobile === null) return <div style={{ background: '#050505', position: 'absolute', inset: 0 }} />;
+
+  return isMobile ? <MatrixRainMobile /> : <MatrixRainCanvas />;
 };
 
 export default MatrixRain;
