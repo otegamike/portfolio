@@ -64,9 +64,7 @@ const Hero: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.65 }}
         >
-          I build scalable web applications, dashboards, and ecommerce platforms
-          using modern JavaScript technologies. Focused on performance,
-          architecture, and beautiful user interfaces.
+          I build scalable web applications, dashboards, and ecommerce platforms using modern JavaScript technologies. Focused on performance, clean architecture, and interfaces that delight users.
         </motion.p>
 
         <motion.div
@@ -81,7 +79,7 @@ const Hero: React.FC = () => {
             whileTap={{ scale: 0.97 }}
             onClick={() => handleScroll('#projects')}
           >
-            View Projects
+            View Projects →
           </motion.button>
           <motion.button
             className="hero__btn hero__btn--secondary"

@@ -152,10 +152,9 @@ const MatrixRainMobile: React.FC = () => {
       // Slow fall: 22–38 s for one full pass so strings are legible.
       // Stagger delays evenly across columns (like the canvas seqPos stagger)
       // then add a small random offset so they don't all move in lockstep.
-      const duration = 12 + Math.random() * 20;
+      const duration = 22 + Math.random() * 16;
       const baseDelay = -(i / columnCount) * duration;
       const jitter = Math.random() * -4;
-      const opacity = 0.1 + Math.random() * 0.5;
 
       return {
         chars,
@@ -163,7 +162,6 @@ const MatrixRainMobile: React.FC = () => {
         delay: baseDelay + jitter,
         // Fixed pixel position — same formula as the canvas: i * COL_WIDTH
         left: i * COL_WIDTH,
-        opacity,
       };
     });
   }, [columnCount]);
@@ -206,7 +204,7 @@ const MatrixRainMobile: React.FC = () => {
             left: col.left,
             animation: `matrixFall ${col.duration}s linear infinite`,
             animationDelay: `${col.delay}s`,
-            opacity: col.opacity,
+            opacity: 0.75,
           }}
         >
           {col.chars}

@@ -16,7 +16,10 @@ const categories: SkillCategory[] = [
     title: 'Frontend',
     skills: [
       { name: 'React' },
+      { name: 'Next.js' },
       { name: 'TypeScript' },
+      { name: 'Tailwind CSS' },
+      { name: 'Vite' },
       { name: 'JavaScript' },
       { name: 'HTML5' },
       { name: 'CSS3' },
@@ -24,21 +27,58 @@ const categories: SkillCategory[] = [
     ],
   },
   {
-    title: 'Backend Knowledge',
+    title: 'State & Data',
+    skills: [
+      { name: 'React Query' },
+      { name: 'Zustand' },
+      { name: 'Redux' },
+      { name: 'REST APIs' },
+      { name: 'Context API' },
+      { name: 'zed' },
+      { name: 'Chart.js' },
+      
+    ],
+  },
+  {
+    title: 'Backend',
     skills: [
       { name: 'Node.js' },
       { name: 'Express' },
       { name: 'MongoDB' },
+      { name: 'PostgreSQL' },
+      { name: 'NextAuth.js' },
       { name: 'REST APIs' },
     ],
   },
   {
-    title: 'Other',
+    title: 'Testing',
+    skills: [
+      { name: 'Vitest' },
+      { name: 'React Testing Library' },
+      { name: 'Jest' },
+      { name: 'Cypress' },
+    ],
+  },
+  {
+    title: 'Tooling & Deployment',
     skills: [
       { name: 'Git' },
+      { name: 'Aws' },
+      { name: 'GitHub Actions' },
+      { name: 'Vercel' },
+      { name: 'Netlify' },
+      { name: 'Google oAuth' },
+    ],
+  },
+  {
+    title: 'Practices',
+    skills: [
       { name: 'Responsive Design' },
       { name: 'Performance Optimization' },
       { name: 'UI Architecture' },
+      { name: 'Component Systems' },
+      { name: 'Accessibility' },
+      { name: 'Clean Code' },
     ],
   },
 ];
@@ -74,6 +114,9 @@ const Skills: React.FC = () => {
           <motion.h2 className="section-title" variants={cardVariants}>
             Technologies I work with
           </motion.h2>
+          <p>
+            Here are some of the technologies I have worked with in my projects and have practical experience with.
+          </p>
 
           <div className="skills__grid">
             {categories.map((cat) => (

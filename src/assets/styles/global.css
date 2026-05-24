@@ -27,6 +27,15 @@ a {
   color: inherit;
 }
 
+ p {
+  text-align: justify;
+  font-family: var(--font-body);
+  letter-spacing: var(--ls-md) ;
+  color: var(--text-secondary);
+  line-height: 1.8;
+  margin-bottom: var(--space-lg);
+}
+
 ul, ol {
   list-style: none;
 }

@@ -41,7 +41,7 @@ function ProjectForm({project = emptyFormData, editMode = false, id, exitEditMod
   const [bulkText, setBulkText] = useState('');
   const [importError, setImportError] = useState('');
 
-  const { register, handleSubmit, control, reset, trigger, formState: { errors, isSubmitting } } = useForm<ProjectFormValues>({
+  const { register, handleSubmit, control, reset, trigger, getValues, formState: { errors, isSubmitting } } = useForm<ProjectFormValues>({
     resolver: zodResolver(ProjectSchema),
     defaultValues: project,
   });
@@ -77,6 +77,15 @@ function ProjectForm({project = emptyFormData, editMode = false, id, exitEditMod
       }
     };
 
+    const handleViewModeSwitch = (mode: 'manual' | 'bulk') => {
+      if (mode === 'bulk') {
+        const currentData = getValues();
+        setBulkText(JSON.stringify(currentData, null, 2));
+        setImportError('');
+      }
+      setViewMode(mode);
+    };
+
     const onProjectSubmit = async (data: ProjectFormValues) => {
         try {
           if (editMode) {
@@ -100,8 +109,8 @@ function ProjectForm({project = emptyFormData, editMode = false, id, exitEditMod
     <div className="form-grid-container">
         
         <div className="view-toggle">
-            <button className={viewMode === 'manual' ? 'active' : ''} onClick={() => setViewMode('manual')}>form</button>
-            <button className={viewMode === 'bulk' ? 'active' : ''} onClick={() => setViewMode('bulk')}>json</button>
+            <button className={viewMode === 'manual' ? 'active' : ''} onClick={() => handleViewModeSwitch('manual')}>form</button>
+            <button className={viewMode === 'bulk' ? 'active' : ''} onClick={() => handleViewModeSwitch('bulk')}>json</button>
         </div>
         
 

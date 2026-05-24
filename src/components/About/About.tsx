@@ -9,7 +9,7 @@ interface HighlightCard {
 }
 
 const highlights: HighlightCard[] = [
-  { value: '4+', label: 'Years Learning Development', icon: '' },
+  { value: '4+', label: 'Years of Development Experience', icon: '' },
   { value: '30+', label: 'Projects Built', icon: '' },
   { value: '15+', label: 'Happy Clients', icon: '' },
   { value: '10+', label: 'Open Source Contrib.', icon: '' },
@@ -47,22 +47,15 @@ const About: React.FC = () => {
           <div className="about__grid">
             <motion.div className="about__bio" variants={fadeUp}>
               <p>
-                I'm a fullstack developer passionate about crafting clean, scalable
-                user interfaces. My focus is on <strong>React</strong> and{' '}
-                <strong>TypeScript</strong>, and I love turning complex problems
-                into intuitive, well-architected solutions.
+                I'm a fullstack developer passionate about crafting <strong>clean, scalable user interfaces</strong>.
+                My core focus is React and TypeScript — turning complex problems into intuitive, well-architected solutions.
               </p>
               <p>
-                I've built dashboards, ecommerce platforms, and interactive web
-                applications from the ground up. I understand the full picture —
-                from component architecture and state management on the frontend
-                to APIs, databases, and search systems on the backend.
+                I've built dashboards, ecommerce platforms, and interactive web applications from the ground up. 
+                I understand the full picture — from component architecture and state management on the frontend to APIs, databases, and search systems on the backend.
               </p>
               <p>
-                I care deeply about <strong>performance</strong>,{' '}
-                <strong>clean code</strong>, and <strong>scalable architecture</strong>.
-                Every line I write is intentional, every component is reusable, and
-                every interface is designed to delight the user.
+                I care deeply about <strong>performance, clean code, and scalable architecture.</strong> Every component I write is reusable, every interface is designed to delight, and every system is built to grow. I'm based in Lagos, Nigeria and open to remote opportunities globally.
               </p>
             </motion.div>
 

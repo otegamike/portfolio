@@ -105,12 +105,12 @@
 }
 
 .hero__btn {
-  padding: 0.875rem 2rem;
+  padding: 0.875rem 1.3rem;
   font-family: var(--font-body);
   letter-spacing: var(--ls-md) ;
   font-size: var(--fs-base);
   font-weight: var(--fw-semibold);
-  border-radius: var(--radius-lg);
+  border-radius: 2px;
   transition: box-shadow var(--transition-base);
 }
 
