@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, useMemo } from 'react';
 
-const FONT_SIZE = 13;
+const FONT_SIZE = 12;
 const COL_WIDTH = 20;
 
 const SKILL_STRINGS = [
@@ -177,6 +177,7 @@ const MatrixRainMobile: React.FC = () => {
         overflow: 'hidden',
         userSelect: 'none',
         pointerEvents: 'none',
+        zIndex: -1,
       }}
     >
       <style>
@@ -322,6 +323,7 @@ const MatrixRainCanvas: React.FC = () => {
         position: 'absolute',
         inset: 0,
         background: '#050505',
+        zIndex: -1,
       }}
     />
   );
@@ -359,10 +361,10 @@ const MatrixRain: React.FC = () => {
   // Respect the OS/browser accessibility setting — show a plain dark
   // background with no animation instead of nothing at all.
   if (prefersReducedMotion)
-    return <div style={{ background: '#050505', position: 'absolute', inset: 0 }} />;
+    return <div style={{ background: '#050505', position: 'absolute', inset: 0, zIndex: -1 }} />;
 
   if (isMobile === null)
-    return <div style={{ background: '#050505', position: 'absolute', inset: 0 }} />;
+    return <div style={{ background: '#050505', position: 'absolute', inset: 0, zIndex: -1 }} />;
 
   return isMobile ? <MatrixRainMobile /> : <MatrixRainCanvas />;
 };

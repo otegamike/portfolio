@@ -95,6 +95,8 @@
   max-width: 580px;
   margin: 0 auto var(--space-2xl);
   line-height: 1.8;
+  text-align: center;
+  text-wrap: balance;
 }
 
 .hero__cta {

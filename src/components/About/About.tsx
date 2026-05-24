@@ -34,7 +34,7 @@ const About: React.FC = () => {
         <motion.div
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: '-80px' }}
+          viewport={{ once: true}}
           variants={containerVariants}
         >
           <SectionLabel variants={fadeUp}>
