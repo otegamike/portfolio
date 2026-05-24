@@ -4,7 +4,7 @@ import { createContext, useState } from "react";
 import type { IProject } from "../types/projectInterface";
 
 // services
-import { getProjects, addNewProject, updateProject, deleteProject } from "../services/projectServices";
+import { getProjects, addNewProject, updateProject, deleteProject, reorderProjects } from "../services/projectServices";
 
 export interface IProjectsContext {
     projects: IProject[];
@@ -14,6 +14,7 @@ export interface IProjectsContext {
     addNewProjectService: (project: IProject) => Promise<void>;
     updateProjectService: (id: string, project: IProject) => Promise<void>;
     deleteProjectService: (id: string) => Promise<void>;
+    reorderProjectsService: (orderedIds: string[]) => Promise<void>;
 }
 
 export const ProjectsContext = createContext<IProjectsContext | undefined>(undefined);
@@ -53,6 +54,11 @@ export const ProjectsContextProvider = ({ children }: { children: React.ReactNod
         setProjects((prevProjects) => prevProjects.filter((p) => p._id !== id));
     }
 
+    const reorderProjectsService = async (orderedIds: string[]) => {
+        await reorderProjects(orderedIds);
+        await silentReload();
+    }
+
     return (
         <ProjectsContext.Provider 
             value={
@@ -63,7 +69,8 @@ export const ProjectsContextProvider = ({ children }: { children: React.ReactNod
                     silentReload, 
                     addNewProjectService, 
                     updateProjectService, 
-                    deleteProjectService 
+                    deleteProjectService,
+                    reorderProjectsService,
                 }
             }
         >

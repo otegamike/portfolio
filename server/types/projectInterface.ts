@@ -9,6 +9,7 @@ export interface IProject {
   githubUrl: string;
   color: string;
   previews: string[];
+  order: number;
 }
 
 export interface IProjectDocument extends IProject {

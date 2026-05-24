@@ -34,6 +34,10 @@ const projectSchema = new db.Schema<IProjectDocument>({
         type: [String],
         required: true,
     },
+    order: {
+        type: Number,
+        default: 0,
+    },
 }, { timestamps: true });
 
 const Project = db.model<IProjectDocument>("Project", projectSchema);

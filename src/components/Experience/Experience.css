@@ -89,6 +89,27 @@
   border-radius: var(--radius-full);
 }
 
+.exp-type {
+    font-size: 11px;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    padding: 2px 8px;
+    width: fit-content;
+    border-radius: 2px;
+    margin-bottom: var(--space-sm);
+}
+
+.exp-period {
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+    margin-top: 4px;
+    margin-bottom: var(--space-sm);
+}
+
 @media (max-width: 768px) {
   .experience__timeline {
     padding-left: var(--space-xl);

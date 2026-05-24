@@ -49,6 +49,17 @@ export const deleteProject = async (id: string) => {
     }
 }
 
+export const reorderProjects = async (orderedIds: string[]) => {
+    try {
+        const response = await api.put('/projects/reorder', { orderedIds });
+        return response.data;
+    } catch (error) {
+        console.error('Error reordering projects:', error);
+        alertObj("Error reordering projects", "error");
+        throw error;
+    }
+}
+
 
 
 

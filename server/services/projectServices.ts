@@ -4,10 +4,11 @@ import { AppError } from "../utils/appError";
 
 export const addNewProject = async (project: IProject) => {
     try {
-        const newProject = new Project(project);
+        const maxOrderProject = await Project.findOne().sort({ order: -1 }).select('order');
+        const newOrder = (maxOrderProject?.order ?? -1) + 1;
+        const newProject = new Project({ ...project, order: newOrder });
         const savedProject = await newProject.save();
         return savedProject;
-
     } catch (error) {
         console.log(error);
         throw new AppError("Error adding new project", 500);
@@ -16,13 +17,24 @@ export const addNewProject = async (project: IProject) => {
 
 export const getProjects = async (): Promise<IProjectDocument[]> => {
     try {
-        const projects = await Project.find();
-
+        const projects = await Project.find().sort({ order: 1, createdAt: 1 });
         return projects;
-
     } catch (error) {
         console.log(error);
         throw new AppError("Error getting projects", 500);
+    }
+}
+
+export const reorderProjects = async (orderedIds: string[]): Promise<void> => {
+    try {
+        await Promise.all(
+            orderedIds.map((id, index) =>
+                Project.findByIdAndUpdate(id, { order: index })
+            )
+        );
+    } catch (error) {
+        console.log(error);
+        throw new AppError("Error reordering projects", 500);
     }
 }
 

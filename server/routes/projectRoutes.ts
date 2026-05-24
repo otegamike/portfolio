@@ -1,7 +1,7 @@
 import {Router, Request, Response} from 'express'
 import { validateAdmin } from '../middleware/validateAdmin.js';
 import { catchAsync } from '../middleware/errorHandler.js';
-import { addNewProject, getProjects, editProject, deleteProject } from '../services/projectServices.js';
+import { addNewProject, getProjects, editProject, deleteProject, reorderProjects } from '../services/projectServices.js';
 
 
 const router = Router();
@@ -66,6 +66,17 @@ router.delete('/delete/:id', validateAdmin, catchAsync(async (req: Request, res:
     }
     const deletedProject = await deleteProject(id);
     res.status(200).json(deletedProject);
+}));
+
+// Reorder projects
+router.put('/reorder', validateAdmin, catchAsync(async (req: Request, res: Response) => {
+    const { orderedIds } = req.body;
+
+    if (!Array.isArray(orderedIds)) {
+        throw new Error('orderedIds must be an array');
+    }
+    await reorderProjects(orderedIds);
+    res.status(200).json({ message: 'Projects reordered successfully' });
 }));
 
 export default router;

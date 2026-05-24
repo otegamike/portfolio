@@ -2,6 +2,7 @@ import { z } from "zod";
 
 export interface IProject {
     _id?: string;
+    order?: number;
     title: string;
     previews: string[];
     description: string;

@@ -31,14 +31,14 @@ const Hero: React.FC = () => {
       </div>
 
       <div className="hero__content">
-        <motion.p
+        <motion.span
           className="hero__greeting"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
         >
           Hello, I'm
-        </motion.p>
+        </motion.span>
 
         <motion.h1
           className="hero__name"

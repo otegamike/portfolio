@@ -3,13 +3,7 @@ import './Footer.css';
 
 const Footer: React.FC = () => {
   return (
-    <motion.footer
-      className="footer"
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.6 }}
-    >
+    <footer className="footer">
       <div className="footer__inner">
         <div className="footer__left">
           <span className="footer__name">
@@ -49,7 +43,7 @@ const Footer: React.FC = () => {
           </motion.a>
         </div>
       </div>
-    </motion.footer>
+    </footer>
   );
 };
 

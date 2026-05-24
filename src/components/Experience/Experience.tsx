@@ -4,31 +4,41 @@ import './Experience.css';
 
 interface ExperienceItem {
   role: string;
+  experienceType: string;
+  timeline: string;
   description: string;
   technologies: string[];
 }
 
 const experiences: ExperienceItem[] = [
   {
-    role: 'Frontend Developer — Shopperific Ecommerce Platform',
+    role: 'Fullstack Developer',
+    experienceType: 'Freelance',
+    timeline: '2023 - Present',
     description:
-      'Designed and built the complete frontend for a scalable ecommerce platform. Implemented product search, cart management, order flows, and integrated with a Node.js/Express/MongoDB backend. Created reusable component systems and handled complex state management.',
+      'Designed and built complete fullstack applications for clients — including ecommerce platforms, admin dashboards, and productivity tools. Delivered end-to-end: frontend architecture, backend APIs, database design, and deployment on Vercel/Netlify.',
     technologies: ['React', 'TypeScript', 'CSS', 'REST APIs', 'MongoDB'],
   },
   {
-    role: 'Dashboard & Analytics Development',
+    role: 'Ecommerce Platform Development',
+    experienceType: 'Project — Shopperific',
+    timeline: '2024 - 2025',
     description:
-      'Built interactive admin dashboards featuring shop overview pages, order tracking, product statistics, and analytics visualizations. Focused on responsive layouts, data-driven components, and seamless API integration.',
-    technologies: ['React', 'TypeScript', 'Chart.js', 'CSS Grid', 'Express'],
+      'Designed and built the complete frontend for a scalable ecommerce platform. Implemented product search with debounce, cart management, order flows, and MongoDB aggregation pipelines for filtered product views and analytics.',
+    technologies: ['React', 'TypeScript', 'CSS', 'MongoDB Aggregation', 'Express'],
   },
   {
-    role: 'Search & Data Integration',
+    role: 'AI-powered SaaS Development',
+    experienceType: 'Project — Agentic CV',
+    timeline: '2026',
     description:
-      'Implemented full-text search with debounced query handling, MongoDB aggregation pipelines, and filtered product views. Built data transformation layers connecting frontend components to complex backend queries.',
-    technologies: ['MongoDB', 'Aggregation', 'Node.js', 'React', 'REST APIs'],
+      'Built a Next.js 16 AI resume builder integrating Google Gemini and Groq for content generation, Clerk for authentication, Cloudinary for asset management, and PDF export. Demonstrates ability to work across a modern full SaaS stack.',
+    technologies: ['Next.js 16', 'React 19', 'Groq SDK', 'Google Gemini SDK', ' Clerk', 'Cloudinary', 'PDF Generation'],
   },
   {
     role: 'UI Component Architecture & Animation',
+    experienceType: 'Cross-project',
+    timeline: '2023 - Present',
     description:
       'Developed scalable component libraries with clean interfaces and TypeScript props. Built animated interfaces using Framer Motion including scroll-reveal, staggered lists, page transitions, and interactive micro-animations.',
     technologies: ['React', 'TypeScript', 'Framer Motion', 'CSS Variables'],
@@ -66,6 +76,9 @@ const Experience: React.FC = () => {
           <motion.h2 className="section-title" variants={fadeUp}>
             My development journey
           </motion.h2>
+          <p>
+            My experience is built through freelance client work and self-directed fullstack projects. Each engagement below reflects a distinct technical challenge solved end-to-end.
+          </p>
 
           <div className="experience__timeline">
             {/* Animated timeline line */}
@@ -90,7 +103,9 @@ const Experience: React.FC = () => {
                 >
                   <div className="experience__dot" />
                   <motion.div whileHover={{ x: 8 }} className="experience__card">
+                    <span className="exp-type">{exp.experienceType}</span>
                     <h3 className="experience__role">{exp.role}</h3>
+                    <p className="exp-period">{exp.timeline}</p>
                     <p className="experience__desc">{exp.description}</p>
                     <div className="experience__techs">
                       {exp.technologies.map((t) => (
