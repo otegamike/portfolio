@@ -63,7 +63,7 @@ function MyProjects({Admin = true}: {Admin?: boolean}) {
   };
 
   return (
-    <>
+    <section id="projects" className="projects">
     {loading ? (
       <div className="loading">
         <SectionLabel infinite={true}>Loading Projects....</SectionLabel>
@@ -110,7 +110,7 @@ function MyProjects({Admin = true}: {Admin?: boolean}) {
         <Projects projects={projects} Admin={Admin} />
       </div>
     )}
-    </>
+    </section>
   )
 }
 

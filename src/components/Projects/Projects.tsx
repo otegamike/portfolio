@@ -132,7 +132,7 @@ interface ProjectsProps {
 
 const Projects = ({projects = allProjects, Admin = false}: ProjectsProps) => {
   return (
-    <section id="projects" className="projects">
+    <section className="projects">
       <div className="section-container">
         <motion.div
           initial="hidden"

@@ -120,6 +120,18 @@
   border-color: var(--accent);
 }
 
+.contact__social--resume {
+  background: rgba(0, 255, 65, 0.06);
+  border-color: rgba(0, 255, 65, 0.25);
+  color: var(--accent);
+  cursor: pointer;
+}
+
+.contact__social--resume:hover {
+  background: rgba(0, 255, 65, 0.12);
+  box-shadow: 0 0 12px rgba(0, 255, 65, 0.2);
+}
+
 @media (max-width: 768px) {
   .contact__grid {
     grid-template-columns: 1fr;

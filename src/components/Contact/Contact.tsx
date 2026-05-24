@@ -1,7 +1,8 @@
 import { motion, type Variants } from 'framer-motion';
-import { Mail } from 'lucide-react';
+import { Mail, FileText } from 'lucide-react';
 import SectionLabel from '../SectionLabel/SectionLabel';
 import ContactForm from './ConactForm';
+import { useResume } from '../../context/ResumeContext';
 import './Contact.css';
 
 const containerVariants: Variants = {
@@ -15,6 +16,7 @@ const fadeUp: Variants = {
 };
 
 const Contact: React.FC = () => {
+  const { openResume } = useResume();
 
   return (
     <section id="contact" className="contact">
@@ -47,6 +49,15 @@ const Contact: React.FC = () => {
                   social platforms.
                 </p>
                 <div className="contact__socials">
+                  <motion.button
+                    onClick={openResume}
+                    className="contact__social contact__social--resume"
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <FileText size={22} />
+                    View Resume
+                  </motion.button>
                   <motion.a
                     href="https://github.com/otegamike"
                     target="_blank"

@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { FileText } from 'lucide-react';
+import { useResume } from '../../context/ResumeContext';
 import './Navbar.css';
 
 const navLinks = [
@@ -12,6 +14,7 @@ const navLinks = [
 ];
 
 const Navbar: React.FC = () => {
+  const { openResume } = useResume();
   const [activeSection, setActiveSection] = useState('home');
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
@@ -80,6 +83,16 @@ const Navbar: React.FC = () => {
               </a>
             </li>
           ))}
+          <li className="navbar__resume-item">
+            <button
+              onClick={openResume}
+              className="navbar__resume-btn"
+              title="View Resume"
+            >
+              <FileText size={14} />
+              <span>Resume</span>
+            </button>
+          </li>
         </ul>
 
         <button
@@ -123,6 +136,23 @@ const Navbar: React.FC = () => {
                   </a>
                 </motion.li>
               ))}
+              <motion.li
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ delay: navLinks.length * 0.06, duration: 0.3 }}
+              >
+                <button
+                  onClick={() => {
+                    setIsMobileOpen(false);
+                    openResume();
+                  }}
+                  className="navbar__mobile-resume-btn"
+                >
+                  <FileText size={16} />
+                  <span>Resume</span>
+                </button>
+              </motion.li>
             </ul>
           </motion.div>
         )}
