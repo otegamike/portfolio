@@ -1,5 +1,5 @@
-import { motion } from 'framer-motion';
 import SectionLabel from '../SectionLabel/SectionLabel';
+import useIntersectionObserver from '../../hooks/useIntersectionObserver';
 import './Skills.css';
 
 interface Skill {
@@ -36,7 +36,6 @@ const categories: SkillCategory[] = [
       { name: 'Context API' },
       { name: 'zed' },
       { name: 'Chart.js' },
-      
     ],
   },
   {
@@ -83,72 +82,46 @@ const categories: SkillCategory[] = [
   },
 ];
 
-const containerVariants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.1 } },
-};
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
-};
-
-const skillVariants = {
-  hidden: { opacity: 0, scale: 0.8 },
-  visible: { opacity: 1, scale: 0.9, transition: { duration: 0.35 } },
-};
-
 const Skills: React.FC = () => {
+  const { ref, isInView } = useIntersectionObserver<HTMLDivElement>({ rootMargin: '-80px' });
+
   return (
     <section id="skills" className="skills">
       <div className="section-container">
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-80px' }}
-          variants={containerVariants}
-        >
-          <SectionLabel variants={cardVariants}>
+        <div ref={ref} className={`skills__container ${isInView ? 'skills__container--visible' : ''}`}>
+          <SectionLabel>
             Skills
           </SectionLabel>
-          <motion.h2 className="section-title" variants={cardVariants}>
+          <h2 className="section-title skills__title">
             Technologies I work with
-          </motion.h2>
-          <p>
+          </h2>
+          <p className="skills__desc">
             Here are some of the technologies I have worked with in my projects and have practical experience with.
           </p>
 
           <div className="skills__grid">
             {categories.map((cat) => (
-              <motion.div
+              <div
                 key={cat.title}
                 className="skills__category"
-                variants={cardVariants}
-                whileHover={{ y: -4 }}
+                style={{ '--i': categories.indexOf(cat) } as React.CSSProperties}
               >
                 <h3 className="skills__category-title">{cat.title}</h3>
-                <motion.div
-                  className="skills__list"
-                  variants={containerVariants}
-                >
+                <div className="skills__list">
                   {cat.skills.map((skill) => (
-                    <motion.span
+                    <span
                       key={skill.name}
                       className="skills__tag"
-                      variants={skillVariants}
-                      whileHover={{
-                        scale: 1,
-                        backgroundColor: 'hsl(120, 70%, 15%)',
-                      }}
+                      style={{ '--j': cat.skills.indexOf(skill) } as React.CSSProperties}
                     >
                       {skill.name}
-                    </motion.span>
+                    </span>
                   ))}
-                </motion.div>
-              </motion.div>
+                </div>
+              </div>
             ))}
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

@@ -2,18 +2,15 @@ import { useState } from 'react';
 import type { IProject } from '../../types/projectInterface';
 import ProjectCard from '../ProjectCard/ProjectCard';
 import ProjectForm from '../../pages/Admin/components/ProjectForm';
-
-// hooks
 import { useProjectContext } from '../../hooks/useProjectContext';
-
-import { motion } from 'framer-motion';
 
 interface ProjectCardContainerProps {
   Admin?: boolean;
   project: IProject;
+  index: number;
 }
 
-function ProjectCardContainer({Admin, project}: ProjectCardContainerProps) {
+function ProjectCardContainer({Admin, project, index}: ProjectCardContainerProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -43,16 +40,9 @@ function ProjectCardContainer({Admin, project}: ProjectCardContainerProps) {
   }
 
   return (
-    <motion.article
+    <article
         className="project-card"
-        variants={{
-            hidden: { opacity: 0, y: 40 },
-            visible: { opacity: 1, y: 0, transition: { duration: 0.55 } },
-        }}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-        whileHover={{ y: -8 }}
+        style={{ '--i': index } as React.CSSProperties}
     >
         {Admin && (
             <div className="project-card__admin">
@@ -72,7 +62,7 @@ function ProjectCardContainer({Admin, project}: ProjectCardContainerProps) {
         ) : (
             <ProjectCard project={project} />
         )}
-    </motion.article>
+    </article>
   )
 }
 

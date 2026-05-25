@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { FileText } from 'lucide-react';
 import { useResume } from '../../context/ResumeContext';
 import './Navbar.css';
@@ -54,12 +53,7 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <motion.nav
-      className={`navbar ${isScrolled ? 'navbar--scrolled' : ''}`}
-      initial={{ y: -80 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-    >
+    <nav className={`navbar ${isScrolled ? 'navbar--scrolled' : ''}`}>
       <div className="navbar__inner">
         <a href="#home" className="navbar__logo" onClick={() => handleClick('#home')}>
           <span className="navbar__logo-bracket">&lt;</span>
@@ -106,58 +100,37 @@ const Navbar: React.FC = () => {
         </button>
       </div>
 
-      <AnimatePresence>
-        {isMobileOpen && (
-          <motion.div
-            className="navbar__mobile"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.35, ease: 'easeInOut' }}
-          >
-            <ul className="navbar__mobile-links">
-              {navLinks.map((link, i) => (
-                <motion.li
-                  key={link.href}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  transition={{ delay: i * 0.06, duration: 0.3 }}
-                >
-                  <a
-                    href={link.href}
-                    className={`navbar__mobile-link ${activeSection === link.href.slice(1) ? 'navbar__mobile-link--active' : ''}`}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleClick(link.href);
-                    }}
-                  >
-                    {link.label}
-                  </a>
-                </motion.li>
-              ))}
-              <motion.li
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ delay: navLinks.length * 0.06, duration: 0.3 }}
+      <div className={`navbar__mobile ${isMobileOpen ? 'navbar__mobile--open' : ''}`}>
+        <ul className="navbar__mobile-links">
+          {navLinks.map((link, i) => (
+            <li key={link.href} style={{ '--i': i } as React.CSSProperties}>
+              <a
+                href={link.href}
+                className={`navbar__mobile-link ${activeSection === link.href.slice(1) ? 'navbar__mobile-link--active' : ''}`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleClick(link.href);
+                }}
               >
-                <button
-                  onClick={() => {
-                    setIsMobileOpen(false);
-                    openResume();
-                  }}
-                  className="navbar__mobile-resume-btn"
-                >
-                  <FileText size={16} />
-                  <span>Resume</span>
-                </button>
-              </motion.li>
-            </ul>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.nav>
+                {link.label}
+              </a>
+            </li>
+          ))}
+          <li style={{ '--i': navLinks.length } as React.CSSProperties}>
+            <button
+              onClick={() => {
+                setIsMobileOpen(false);
+                openResume();
+              }}
+              className="navbar__mobile-resume-btn"
+            >
+              <FileText size={16} />
+              <span>Resume</span>
+            </button>
+          </li>
+        </ul>
+      </div>
+    </nav>
   );
 };
 

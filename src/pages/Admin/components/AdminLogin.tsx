@@ -1,4 +1,3 @@
-import { motion } from "framer-motion"
 import { useState } from "react"
 import { adminLogin } from "../../../services/adminLogin"
 
@@ -27,7 +26,7 @@ function AdminLogin({ AuthenticateAdmin }: AdminLoginProps) {
 
   return (
     <div className="admin-login-wrapper">
-        <motion.div className="admin-login-box" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}>
+        <div className="admin-login-box">
           <h2 className="admin-login-title">SYSTEM_LOGIN</h2>
           <form onSubmit={handleAdminLogin} className="admin-login-form">
             <div className="input-group">
@@ -37,7 +36,7 @@ function AdminLogin({ AuthenticateAdmin }: AdminLoginProps) {
             {errorMsg && <div className="error-message">{errorMsg}</div>}
             <button type="submit" className="admin-btn">{isLoggingIn ? 'AUTHENTICATING...' : 'AUTHENTICATE'}</button>
           </form>
-        </motion.div>
+        </div>
       </div>
   )
 }

@@ -4,14 +4,23 @@
   border: 1px solid var(--border-color);
   border-radius: var(--radius-xl);
   overflow: hidden;
-  transition: border-color var(--transition-base), box-shadow var(--transition-base);
   display: flex;
   flex-direction: column;
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.55s ease, transform 0.55s ease, border-color var(--transition-base), box-shadow var(--transition-base);
+  transition-delay: calc(var(--i, 0) * 0.15s);
+}
+
+.projects__container--visible .project-card {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .project-card:hover {
   border-color: var(--border-color-hover);
   box-shadow: var(--shadow-glow);
+  transform: translateY(-8px);
 }
 
 /* ===== Accent bar (fallback when no previews) ===== */
@@ -170,7 +179,15 @@
   font-size: var(--fs-sm);
   font-weight: var(--fw-medium);
   border-radius: var(--radius-md);
-  transition: box-shadow var(--transition-fast);
+  transition: box-shadow var(--transition-fast), transform 0.15s ease;
+}
+
+.project-card__link:hover {
+  transform: scale(1.05);
+}
+
+.project-card__link:active {
+  transform: scale(0.97);
 }
 
 .project-card__link--primary {

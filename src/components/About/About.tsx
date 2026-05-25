@@ -1,5 +1,5 @@
-import { motion } from 'framer-motion';
 import SectionLabel from '../SectionLabel/SectionLabel';
+import useIntersectionObserver from '../../hooks/useIntersectionObserver';
 import './About.css';
 
 interface HighlightCard {
@@ -15,37 +15,22 @@ const highlights: HighlightCard[] = [
   { value: '10+', label: 'Open Source Contrib.', icon: '' },
 ];
 
-const containerVariants = {
-  hidden: {},
-  visible: {
-    transition: { staggerChildren: 0.12 },
-  },
-};
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
-};
-
 const About: React.FC = () => {
+  const { ref, isInView } = useIntersectionObserver<HTMLDivElement>({ rootMargin: '-80px' });
+
   return (
     <section id="about" className="about">
       <div className="section-container">
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true}}
-          variants={containerVariants}
-        >
-          <SectionLabel variants={fadeUp}>
+        <div ref={ref} className={`about__container ${isInView ? 'about__container--visible' : ''}`}>
+          <SectionLabel>
             About Me
           </SectionLabel>
-          <motion.h2 className="section-title" variants={fadeUp}>
+          <h2 className="section-title about__title">
             Building digital experiences with modern tools
-          </motion.h2>
+          </h2>
 
           <div className="about__grid">
-            <motion.div className="about__bio" variants={fadeUp}>
+            <div className="about__bio">
               <p>
                 I'm a fullstack developer passionate about crafting <strong>clean, scalable user interfaces</strong>.
                 My core focus is React and TypeScript — turning complex problems into intuitive, well-architected solutions.
@@ -57,30 +42,25 @@ const About: React.FC = () => {
               <p>
                 I care deeply about <strong>performance, clean code, and scalable architecture.</strong> Every component I write is reusable, every interface is designed to delight, and every system is built to grow. I'm based in Lagos, Nigeria and open to remote opportunities globally.
               </p>
-            </motion.div>
+            </div>
 
-            <motion.div
-              className="about__highlights"
-              variants={containerVariants}
-            >
+            <div className="about__highlights">
               {highlights.map((h, i) => (
-                <motion.div
+                <div
                   key={i}
                   className="about__card"
-                  variants={fadeUp}
-                  transition={{duration: 0.3, ease: "easeInOut"}}
-                  whileHover={{ y: -6, boxShadow: '0 12px 40px var(--accent-glow)'}}
+                  style={{ '--i': i } as React.CSSProperties}
                 >
                   <span className="about__card-icon">
                     {h.icon || h.value}
                   </span>
                   {h.icon && <span className="about__card-value">{h.value}</span>}
                   <span className="about__card-label">{h.label}</span>
-                </motion.div>
+                </div>
               ))}
-            </motion.div>
+            </div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

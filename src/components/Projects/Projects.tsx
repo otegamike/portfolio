@@ -1,7 +1,7 @@
-import { motion } from 'framer-motion';
 import ProjectCardContainer from './ProjectCardContainer';
 import type { IProject as ProjectCardProps } from '../../types/projectInterface';
 import SectionLabel from '../SectionLabel/SectionLabel';
+import useIntersectionObserver from '../../hooks/useIntersectionObserver';
 import './Projects.css';
 
 const allProjects: ProjectCardProps[] = [
@@ -115,51 +115,37 @@ const allProjects: ProjectCardProps[] = [
   }
 ];
 
-const containerVariants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.15 } },
-};
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
-};
-
 interface ProjectsProps {
   projects?: ProjectCardProps[];
   Admin?: boolean;
 }
 
 const Projects = ({projects = allProjects, Admin = false}: ProjectsProps) => {
+  const { ref, isInView } = useIntersectionObserver<HTMLDivElement>({ rootMargin: '-80px' });
+
   return (
     <section className="projects">
       <div className="section-container">
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-80px' }}
-          variants={containerVariants}
-        >
-          <SectionLabel variants={fadeUp}>
+        <div ref={ref} className={`projects__container ${isInView ? 'projects__container--visible' : ''}`}>
+          <SectionLabel>
             Projects
           </SectionLabel>
-          <motion.h2 className="section-title" variants={fadeUp}>
+          <h2 className="section-title projects__title">
             Featured work
-          </motion.h2>
+          </h2>
           {!Admin && (
-            <motion.p className="section-description" variants={fadeUp}>
+            <p className="section-description projects__desc">
               A selection of projects that showcase my skills in frontend
               development, component architecture, and full-stack integration.
-            </motion.p>
+            </p>
           )}
 
-          <motion.div className="projects__grid" variants={containerVariants}>
-            {projects.map((project) => (
-              
-              <ProjectCardContainer key={project.title} project={project} Admin={Admin} />
+          <div className="projects__grid">
+            {projects.map((project, i) => (
+              <ProjectCardContainer key={project.title} project={project} Admin={Admin} index={i} />
             ))}
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
       </div>
     </section>
   );

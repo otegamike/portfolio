@@ -18,6 +18,7 @@
   box-shadow: var(--shadow-glow);
   position: relative;
   overflow: hidden;
+  animation: scaleIn 0.4s ease forwards;
 }
 
 .admin-login-box::before {

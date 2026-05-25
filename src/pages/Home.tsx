@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion';
 import MatrixRain from '../components/MatrixRain/MatrixRain';
 import Navbar from '../components/Navbar/Navbar';
 import Hero from '../components/Hero/Hero';
@@ -16,13 +15,7 @@ import './Home.css';
 const Home: React.FC = () => {
   return (
     <ResumeContextProvider>
-      <motion.div
-        className="home"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.4 }}
-      >
+      <div className="home">
         <MatrixRain />
         <Navbar />
         <main>
@@ -37,7 +30,7 @@ const Home: React.FC = () => {
         </main>
         <Footer />
         <ResumeOverlay />
-      </motion.div>
+      </div>
     </ResumeContextProvider>
   );
 };

@@ -26,7 +26,7 @@ export const ProjectsContextProvider = ({ children }: { children: React.ReactNod
     const silentReload = async () => {
       try {
         const projects = await getProjects();
-        console.log(projects);
+
         setProjects(projects);
       } catch (error) {
         console.error(error);

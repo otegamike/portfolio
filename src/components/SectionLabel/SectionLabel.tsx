@@ -1,25 +1,20 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
-import type { Variants } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
+import useIntersectionObserver from '../../hooks/useIntersectionObserver';
 
 interface SectionLabelProps {
   children: string;
   className?: string;
-  variants?: Variants;
-  speed?: number; // Added speed control
+  speed?: number;
   infinite?: boolean;
 }
 
 const SectionLabel: React.FC<SectionLabelProps> = ({ 
   children, 
   className = "section-label", 
-  variants,
-  speed = 100 ,
+  speed = 100,
   infinite = false
 }) => {
-  const ref = useRef<HTMLSpanElement>(null);
-  // Added 'amount' to ensure it triggers when 10% is visible
-  const isInView = useInView(ref, { once: true, margin: "-10% 0px -10% 0px" });
+  const { ref, isInView } = useIntersectionObserver<HTMLSpanElement>({ rootMargin: "-10% 0px -10% 0px" });
   const [displayedText, setDisplayedText] = useState("");
 
   useEffect(() => {
@@ -43,20 +38,17 @@ const SectionLabel: React.FC<SectionLabelProps> = ({
   }, [isInView, children, speed]);
 
   return (
-    <motion.span
+    <span
       ref={ref}
       className={className}
-      variants={variants}
-      initial="hidden"
-      animate={isInView ? "visible" : "hidden"}
       style={{ 
         display: 'inline-block', 
-        minHeight: '1em', // Prevents height collapse
-        minWidth: '1px'   // Ensures it's detectable
+        minHeight: '1em',
+        minWidth: '1px'
       }}
     >
       {displayedText}
-    </motion.span>
+    </span>
   );
 };
 

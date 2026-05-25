@@ -1,5 +1,5 @@
-import { motion } from 'framer-motion';
 import SectionLabel from '../SectionLabel/SectionLabel';
+import useIntersectionObserver from '../../hooks/useIntersectionObserver';
 import './Experience.css';
 
 interface ExperienceItem {
@@ -45,64 +45,35 @@ const experiences: ExperienceItem[] = [
   },
 ];
 
-const itemVariants = {
-  hidden: { opacity: 0, x: -30 },
-  visible: { opacity: 1, x: 0, transition: { duration: 0.55 } },
-};
-
-const containerVariants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.2 } },
-};
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
-};
-
 const Experience: React.FC = () => {
+  const { ref, isInView } = useIntersectionObserver<HTMLDivElement>({ rootMargin: '-80px' });
+
   return (
     <section id="experience" className="experience">
       <div className="section-container">
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-80px' }}
-          variants={containerVariants}
-        >
-          <SectionLabel variants={fadeUp}>
+        <div ref={ref} className={`experience__container ${isInView ? 'experience__container--visible' : ''}`}>
+          <SectionLabel>
             Experience
           </SectionLabel>
-          <motion.h2 className="section-title" variants={fadeUp}>
+          <h2 className="section-title experience__title">
             My development journey
-          </motion.h2>
-          <p>
+          </h2>
+          <p className="experience__subtitle">
             My experience is built through freelance client work and self-directed fullstack projects. Each engagement below reflects a distinct technical challenge solved end-to-end.
           </p>
 
           <div className="experience__timeline">
-            {/* Animated timeline line */}
-            <motion.div
-              className="experience__line"
-              initial={{ scaleY: 0 }}
-              whileInView={{ scaleY: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 1.2, ease: 'easeOut' }}
-              style={{ transformOrigin: 'top' }}
-            />
+            <div className="experience__line" />
 
-            <motion.div
-              className="experience__items"
-              variants={containerVariants}
-            >
+            <div className="experience__items">
               {experiences.map((exp, i) => (
-                <motion.div
+                <div
                   key={i}
                   className="experience__item"
-                  variants={itemVariants}
+                  style={{ '--i': i } as React.CSSProperties}
                 >
                   <div className="experience__dot" />
-                  <motion.div whileHover={{ x: 8 }} className="experience__card">
+                  <div className="experience__card">
                     <span className="exp-type">{exp.experienceType}</span>
                     <h3 className="experience__role">{exp.role}</h3>
                     <p className="exp-period">{exp.timeline}</p>
@@ -114,12 +85,12 @@ const Experience: React.FC = () => {
                         </span>
                       ))}
                     </div>
-                  </motion.div>
-                </motion.div>
+                  </div>
+                </div>
               ))}
-            </motion.div>
+            </div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

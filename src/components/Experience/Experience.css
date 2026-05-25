@@ -2,6 +2,22 @@
   background: var(--bg-primary);
 }
 
+.experience__container > * {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.experience__container--visible > *:nth-child(1) { transition-delay: 0s; }
+.experience__container--visible > *:nth-child(2) { transition-delay: 0.1s; }
+.experience__container--visible > *:nth-child(3) { transition-delay: 0.2s; }
+.experience__container--visible > *:nth-child(4) { transition-delay: 0.3s; }
+
+.experience__container--visible > * {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 .experience__timeline {
   position: relative;
   margin-top: var(--space-2xl);
@@ -16,6 +32,13 @@
   height: 100%;
   background: var(--gradient-accent);
   border-radius: var(--radius-full);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 1.2s ease-out;
+}
+
+.experience__container--visible .experience__line {
+  transform: scaleY(1);
 }
 
 .experience__items {
@@ -30,6 +53,15 @@
   align-items: flex-start;
   gap: var(--space-lg);
   cursor: default;
+  opacity: 0;
+  transform: translateX(-30px);
+  transition: opacity 0.55s ease, transform 0.55s ease;
+  transition-delay: calc(0.2s + var(--i, 0) * 0.2s);
+}
+
+.experience__container--visible .experience__item {
+  opacity: 1;
+  transform: translateX(0);
 }
 
 .experience__dot {
@@ -52,12 +84,13 @@
   border-radius: var(--radius-xl);
   padding: var(--space-xl);
   flex: 1;
-  transition: border-color var(--transition-base), box-shadow var(--transition-base);
+  transition: border-color var(--transition-base), box-shadow var(--transition-base), transform 0.3s ease;
 }
 
 .experience__item:hover .experience__card {
   border-color: var(--border-color-hover);
   box-shadow: var(--shadow-glow);
+  transform: translateX(8px);
 }
 
 .experience__role {
@@ -73,6 +106,13 @@
   color: var(--text-secondary);
   line-height: 1.7;
   margin-bottom: var(--space-md);
+}
+
+.experience__subtitle {
+  font-size: var(--fs-base);
+  color: var(--text-secondary);
+  line-height: 1.7;
+  max-width: 600px;
 }
 
 .experience__techs {

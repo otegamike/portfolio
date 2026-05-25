@@ -48,11 +48,12 @@
   gap: var(--space-xs);
   font-size: var(--fs-sm);
   color: var(--text-secondary);
-  transition: color var(--transition-fast);
+  transition: color var(--transition-fast), transform 0.2s ease;
 }
 
 .footer__link:hover {
   color: var(--accent);
+  transform: translateY(-2px);
 }
 
 @media (max-width: 480px) {
