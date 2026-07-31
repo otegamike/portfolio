@@ -79,13 +79,18 @@ const ResumeOverlay: React.FC = () => {
             <div className="resume-overlay__content">
               <div className="resume-overlay__viewer">
                 <img
-                  src="/resume/mike-resume-page1.png"
+                  src="/resume/pdf_page_1.png"
                   alt="Resume Page 1"
                   className="resume-overlay__page-img"
                 />
                 <img
-                  src="/resume/mike-resume-page2.png"
+                  src="/resume/pdf_page_2.png"
                   alt="Resume Page 2"
+                  className="resume-overlay__page-img"
+                />
+                <img
+                  src="/resume/pdf_page_3.png"
+                  alt="Resume Page 3"
                   className="resume-overlay__page-img"
                 />
               </div>
